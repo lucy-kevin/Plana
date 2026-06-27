@@ -1,39 +1,51 @@
-// app/setup/page.tsx
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PLAN_TYPES } from '@/frontend/types/planTypes'; // Importing the dynamic data
+import { usePlanStore } from '@/frontend/store/planaStore';
+import { PLAN_TYPES } from '@/frontend/types/planTypes';
 
 export default function PlanSetup() {
   const [selected, setSelected] = useState<string | null>(null);
+  const { setDraft } = usePlanStore();
   const router = useRouter();
 
+  const icons: Record<string, string> = {
+    wedding: 'Wedding', trip: 'Trip', corporate: 'Corporate Event',
+    birthday: 'Birthday', other: 'Other',
+  };
+
+  function proceed() {
+    if (!selected) return;
+    setDraft({ type: selected });
+    router.push(`/details/${selected}`);
+  }
+
   return (
-    <div className="min-h-screen bg-[#FAF9F6] p-6 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-[#FDFBF7] p-6 flex flex-col items-center justify-center font-sans">
       <div className="w-full max-w-md">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-8">What are you planning?</h1>
-        
-        <div className="grid grid-cols-2 gap-4">
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-4">New plan</p>
+        <h1 className="text-4xl font-serif text-[#2D2926] mb-10">What are you planning?</h1>
+
+        <div className="grid grid-cols-2 gap-4 mb-8">
           {PLAN_TYPES.map((type) => (
             <button
               key={type.id}
               onClick={() => setSelected(type.id)}
-              className={`p-6 rounded-3xl border-2 transition-all flex flex-col items-center gap-3 ${
-                selected === type.id 
-                  ? 'border-indigo-600 bg-indigo-50 shadow-sm' 
-                  : 'border-gray-200 bg-white hover:border-indigo-200'
+              className={`p-6 rounded-3xl border-2 transition-all text-left ${
+                selected === type.id
+                  ? 'border-[#2D2926] bg-[#2D2926] text-[#FDFBF7]'
+                  : 'border-[#EBE7E0] bg-white text-[#2D2926] hover:border-[#2D2926]'
               }`}
             >
-              <span className="text-4xl">{type.icon}</span>
-              <span className="font-bold text-gray-800">{type.label}</span>
+              <p className="font-bold text-base">{icons[type.id] ?? type.label}</p>
             </button>
           ))}
         </div>
 
-        <button 
+        <button
           disabled={!selected}
-          onClick={() => router.push('/budget')} 
-          className="w-full mt-8 bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-gray-800 disabled:opacity-50 transition"
+          onClick={proceed}
+          className="w-full bg-[#2D2926] text-[#FDFBF7] py-5 rounded-2xl font-bold text-base hover:bg-[#1A1614] disabled:opacity-40 transition-all"
         >
           Continue
         </button>

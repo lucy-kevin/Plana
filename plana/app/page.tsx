@@ -60,7 +60,7 @@ export default function HomePage() {
 
       {/* Nav */}
       <nav className="nav-bar">
-        <span className="text-2xl font-serif tracking-tight text-[#3d1b00]">Plana</span>
+        <span className="text-2xl font-serif tracking-tight text-foreground">Plana</span>
         <div className="flex items-center gap-6">
           <Link href="/providers/join" className="hidden sm:block text-sm font-semibold text-[#7a3700] hover:text-foreground transition-colors">
             For Providers
@@ -70,7 +70,7 @@ export default function HomePage() {
           </Link>
           <Link
             href="/login"
-            className="bg-[#3d1b00] text-button-text px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-button-hover transition-colors"
+            className="bg-button-bg text-button-text px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-button-hover transition-colors"
           >
             Get started
           </Link>
@@ -78,39 +78,44 @@ export default function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="px-6 md:px-16 pt-16 pb-0 grid md:grid-cols-2 gap-12 items-center min-h-[calc(100vh-73px)]">
+      <section className="relative overflow-hidden px-6 md:px-16 pt-16 pb-0 grid md:grid-cols-2 gap-12 items-center min-h-[calc(100vh-73px)]">
+        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+          <source src="/assets/13903091_960_540_60fps.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/20" />
+
         {/* Left: Headline */}
-        <div>
-          <p className="badge-micropill mb-8">
+        <div className="relative z-10">
+          <p className="badge-micropill text-white/50 mb-8">
             AI-Powered Planning for Uganda
           </p>
-          <h1 className="text-[clamp(3rem,6.5vw,6rem)] font-serif leading-[1.05] tracking-tight mb-8">
+          <h1 className="text-[clamp(3rem,6.5vw,6rem)] font-serif leading-[1.05] tracking-tight text-white mb-8">
             Plan anything.<br />Know the<br />real cost.
           </h1>
-          <p className="text-lg text-body leading-relaxed max-w-md mb-10">
+          <p className="text-lg text-white/70 leading-relaxed max-w-md mb-10">
             Plana uses AI to generate realistic budgets for weddings, trips, parties, and more — with actual Uganda prices, local vendors, and savings advice built in.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center bg-[#3d1b00] text-button-text px-8 py-4 rounded-2xl font-bold text-base hover:bg-button-hover transition-colors"
+              className="inline-flex items-center justify-center bg-button-bg text-button-text px-8 py-4 rounded-2xl font-bold text-base hover:bg-button-hover transition-colors"
             >
               Start planning free
             </Link>
             <Link
               href="/providers/join"
-              className="inline-flex items-center justify-center border-2 border-border text-[#3d1b00] px-8 py-4 rounded-2xl font-bold text-base hover:border-foreground transition-colors"
+              className="inline-flex items-center justify-center border-2 border-white/40 text-white px-8 py-4 rounded-2xl font-bold text-base hover:border-white transition-colors"
             >
               Join as provider
             </Link>
           </div>
-          <p className="mt-5 text-xs text-muted font-medium">
+          <p className="mt-5 text-xs text-white/40 font-medium">
             No credit card. Also works via USSD — dial *384*200253#
           </p>
         </div>
 
         {/* Right: Budget breakdown preview */}
-        <div className="hidden md:block">
+        <div className="hidden md:block relative z-10">
           <div className="bg-surface border border-border rounded-[2rem] p-8 shadow-[0_20px_60px_-10px_rgba(45,41,38,0.08)]">
             <div className="flex items-center justify-between mb-1">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted">Sample breakdown</p>

@@ -69,7 +69,7 @@ export default function PlanSetup() {
         {/* Custom description — only shown when Other is selected */}
         {isOther && (
           <div className="mb-6">
-            <label className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-3">
+            <label className="block text-[10px] font-black uppercase tracking-[0.25em] text-muted mb-3">
               Describe what you are planning
             </label>
             <input
@@ -77,7 +77,7 @@ export default function PlanSetup() {
               value={customType}
               onChange={e => setCustomType(e.target.value)}
               placeholder="e.g. Kwanjula, Baby shower, Church fundraiser..."
-              className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] focus:ring-4 focus:ring-[#2D2926]/5 transition-all text-[#2D2926] font-medium text-sm"
+              className="w-full p-4 bg-white rounded-2xl border-2 border-border outline-none focus:border-foreground focus:ring-4 focus:ring-foreground/5 transition-all text-foreground font-medium text-sm"
             />
           </div>
         )}

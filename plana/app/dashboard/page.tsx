@@ -272,10 +272,10 @@ export default function UserDashboard() {
                       )}
 
                       {/* Edit budget */}
-                      <div className="mt-2 pt-4 border-t border-[#EBE7E0]">
+                      <div className="mt-2 pt-4 border-t border-border">
                         <button
                           onClick={() => setEditBudgetPlan(editBudgetPlan === plan.id ? null : plan.id)}
-                          className="text-xs font-black text-[#A8A29E] uppercase tracking-widest hover:text-[#2D2926] transition-colors"
+                          className="text-xs font-black text-muted uppercase tracking-widest hover:text-foreground transition-colors"
                         >
                           {editBudgetPlan === plan.id ? 'Cancel ↑' : 'Edit budget'}
                         </button>
@@ -283,19 +283,19 @@ export default function UserDashboard() {
                         {editBudgetPlan === plan.id && (
                           <div className="mt-3 flex gap-3">
                             <div className="relative flex-1">
-                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#A8A29E]">UGX</span>
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-muted">UGX</span>
                               <input
                                 type="number"
                                 value={newBudget[plan.id] ?? ''}
                                 onChange={e => setNewBudget(prev => ({ ...prev, [plan.id]: e.target.value }))}
                                 placeholder={`Current: ${fmt(plan.budget ?? 0)}`}
-                                className="w-full pl-14 py-4 bg-[#F9F7F4] rounded-2xl border-2 border-transparent focus:border-[#2D2926] outline-none font-bold text-[#2D2926] text-sm transition-all"
+                                className="w-full pl-14 py-4 bg-input-bg rounded-2xl border-2 border-transparent focus:border-foreground outline-none font-bold text-foreground text-sm transition-all"
                               />
                             </div>
                             <button
                               onClick={() => updateBudget(plan)}
                               disabled={savingBudget === plan.id || !newBudget[plan.id]}
-                              className="bg-[#2D2926] text-[#FDFBF7] px-6 rounded-2xl font-bold text-sm hover:bg-[#1A1614] disabled:opacity-50 transition-all"
+                              className="bg-button-bg text-button-text px-6 rounded-2xl font-bold text-sm hover:bg-button-hover disabled:opacity-50 transition-all"
                             >
                               {savingBudget === plan.id ? 'Saving...' : 'Save'}
                             </button>

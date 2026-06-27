@@ -9,7 +9,7 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-serif'
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="bg-[#FDFBF7] font-sans antialiased text-[#2D2926]">
+      <body className="bg-background font-sans antialiased text-foreground">
         {/* <Navbar /> */}
         <main className="pt-24">{children}</main>
       </body>

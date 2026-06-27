@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { usePlanStore } from '@/frontend/store/planaStore'; // Adjusted path to standard project root
+import { usePlanStore } from '@/frontend/store/planaStore';
 import { useRouter } from "next/navigation";
 
 export default function PlanForm() {
@@ -12,7 +12,6 @@ export default function PlanForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Initialize the plan using Zustand store
     setPlan({
       id: Date.now().toString(),
       type: type as any,
@@ -56,7 +55,7 @@ export default function PlanForm() {
 
       <button 
         type="submit" 
-        className="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700 transition"
+        className="bg-button-bg text-white p-2 w-full rounded hover:bg-button-hover transition"
       >
         Create Plan
       </button>

@@ -44,7 +44,7 @@ const breakdown = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2D2926] font-sans">
+    <div className="min-h-screen bg-background text-foreground">
 
       <style>{`
         @keyframes marquee {
@@ -59,18 +59,18 @@ export default function HomePage() {
       `}</style>
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-16 py-5 border-b border-[#EBE7E0] bg-[#FDFBF7]/90 backdrop-blur-sm sticky top-0 z-50">
-        <span className="text-2xl font-serif tracking-tight">Plana</span>
+      <nav className="nav-bar">
+        <span className="text-2xl font-serif tracking-tight text-foreground">Plana</span>
         <div className="flex items-center gap-6">
-          <Link href="/providers/join" className="hidden sm:block text-sm font-semibold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+          <Link href="/providers/join" className="hidden sm:block text-sm font-semibold text-[#7a3700] hover:text-foreground transition-colors">
             For Providers
           </Link>
-          <Link href="/login" className="text-sm font-semibold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+          <Link href="/login" className="text-sm font-semibold text-[#7a3700] hover:text-foreground transition-colors">
             Sign in
           </Link>
           <Link
             href="/login"
-            className="bg-[#2D2926] text-[#FDFBF7] px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#1A1614] transition-colors"
+            className="bg-button-bg text-button-text px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-button-hover transition-colors"
           >
             Get started
           </Link>
@@ -78,43 +78,48 @@ export default function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="px-6 md:px-16 pt-16 pb-0 grid md:grid-cols-2 gap-12 items-center min-h-[calc(100vh-73px)]">
+      <section className="relative overflow-hidden px-6 md:px-16 pt-16 pb-0 grid md:grid-cols-2 gap-12 items-center min-h-[calc(100vh-73px)]">
+        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+          <source src="/assets/13903091_960_540_60fps.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/20" />
+
         {/* Left: Headline */}
-        <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-8">
+        <div className="relative z-10">
+          <p className="badge-micropill text-white/50 mb-8">
             AI-Powered Planning for Uganda
           </p>
-          <h1 className="text-[clamp(3rem,6.5vw,6rem)] font-serif leading-[1.05] tracking-tight mb-8">
+          <h1 className="text-[clamp(3rem,6.5vw,6rem)] font-serif leading-[1.05] tracking-tight text-white mb-8">
             Plan anything.<br />Know the<br />real cost.
           </h1>
-          <p className="text-lg text-[#7D766D] leading-relaxed max-w-md mb-10">
+          <p className="text-lg text-white/70 leading-relaxed max-w-md mb-10">
             Plana uses AI to generate realistic budgets for weddings, trips, parties, and more — with actual Uganda prices, local vendors, and savings advice built in.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center bg-[#2D2926] text-[#FDFBF7] px-8 py-4 rounded-2xl font-bold text-base hover:bg-[#1A1614] transition-colors"
+              className="inline-flex items-center justify-center bg-button-bg text-button-text px-8 py-4 rounded-2xl font-bold text-base hover:bg-button-hover transition-colors"
             >
               Start planning free
             </Link>
             <Link
               href="/providers/join"
-              className="inline-flex items-center justify-center border-2 border-[#EBE7E0] text-[#2D2926] px-8 py-4 rounded-2xl font-bold text-base hover:border-[#2D2926] transition-colors"
+              className="inline-flex items-center justify-center border-2 border-white/40 text-white px-8 py-4 rounded-2xl font-bold text-base hover:border-white transition-colors"
             >
               Join as provider
             </Link>
           </div>
-          <p className="mt-5 text-xs text-[#A8A29E] font-medium">
+          <p className="mt-5 text-xs text-white/40 font-medium">
             No credit card. Also works via USSD — dial *384*200253#
           </p>
         </div>
 
         {/* Right: Budget breakdown preview */}
-        <div className="hidden md:block">
-          <div className="bg-white border border-[#EBE7E0] rounded-[2rem] p-8 shadow-[0_20px_60px_-10px_rgba(45,41,38,0.08)]">
+        <div className="hidden md:block relative z-10">
+          <div className="bg-surface border border-border rounded-[2rem] p-8 shadow-[0_20px_60px_-10px_rgba(45,41,38,0.08)]">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E]">Sample breakdown</p>
-              <span className="text-[10px] font-bold bg-[#F4F0E8] text-[#7D766D] px-3 py-1 rounded-full">Wedding · Kampala</span>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted">Sample breakdown</p>
+              <span className="text-[10px] font-bold bg-accent-bg text-body px-3 py-1 rounded-full">Wedding · Kampala</span>
             </div>
             <p className="text-2xl font-serif mb-6 mt-1">UGX 20,000,000</p>
 
@@ -122,15 +127,15 @@ export default function HomePage() {
               {breakdown.map((item) => (
                 <div key={item.label}>
                   <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-sm font-semibold text-[#2D2926]">{item.label}</span>
+                    <span className="text-sm font-semibold text-foreground">{item.label}</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-[#A8A29E] font-medium">{item.pct}%</span>
-                      <span className="text-sm font-bold text-[#2D2926] w-14 text-right">{item.amount}</span>
+                      <span className="text-xs text-muted font-medium">{item.pct}%</span>
+                      <span className="text-sm font-bold text-foreground w-14 text-right">{item.amount}</span>
                     </div>
                   </div>
-                  <div className="h-1.5 w-full bg-[#F4F0E8] rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-accent-bg rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#2D2926] rounded-full"
+                      className="h-full bg-[#7a3700] rounded-full"
                       style={{ width: `${item.pct}%` }}
                     />
                   </div>
@@ -138,11 +143,11 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className="mt-6 pt-6 border-t border-[#EBE7E0] flex items-center justify-between">
-              <p className="text-xs text-[#A8A29E] font-medium">Generated by Plana AI in 3 seconds</p>
+            <div className="mt-6 pt-6 border-t border-border flex items-center justify-between">
+              <p className="text-xs text-muted font-medium">Generated by Plana AI in 3 seconds</p>
               <Link
                 href="/login"
-                className="text-xs font-bold text-[#2D2926] hover:underline underline-offset-4"
+                className="text-xs font-bold text-foreground hover:underline underline-offset-4"
               >
                 Create yours
               </Link>
@@ -152,12 +157,12 @@ export default function HomePage() {
       </section>
 
       {/* Marquee — signature element */}
-      <div className="mt-16 border-y border-[#EBE7E0] overflow-hidden py-4 bg-[#F4F0E8]">
+      <div className="mt-16 border-y border-border overflow-hidden py-4 bg-accent-bg">
         <div className="marquee-track flex gap-0 whitespace-nowrap">
           {[...eventTypes, ...eventTypes].map((type, i) => (
-            <span key={i} className="text-sm font-bold text-[#7D766D] px-8 shrink-0">
+            <span key={i} className="text-sm font-bold text-body px-8 shrink-0">
               {type}
-              <span className="ml-8 text-[#C4BAB0]">·</span>
+              <span className="ml-8 text-muted-lighter">·</span>
             </span>
           ))}
         </div>
@@ -165,20 +170,20 @@ export default function HomePage() {
 
       {/* Features — editorial list */}
       <section className="px-6 md:px-16 py-24">
-        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-10">What Plana does</p>
-        <div className="divide-y divide-[#EBE7E0]">
+        <p className="badge-micropill mb-10">What Plana does</p>
+        <div className="divide-y divide-border">
           {features.map((f) => (
             <div key={f.title} className="py-8 grid md:grid-cols-3 gap-4 md:gap-16 items-start group">
-              <h3 className="text-xl font-serif text-[#2D2926] md:col-span-1">{f.title}</h3>
-              <p className="text-[#7D766D] leading-relaxed text-base md:col-span-2">{f.body}</p>
+              <h3 className="text-xl font-serif text-foreground md:col-span-1">{f.title}</h3>
+              <p className="text-body leading-relaxed text-base md:col-span-2">{f.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* How it works — dark */}
-      <section className="bg-[#2D2926] px-6 md:px-16 py-24">
-        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/30 mb-16">How it works</p>
+      <section className="bg-button-bg px-6 md:px-16 py-24">
+        <p className="badge-micropill text-white/30 mb-16">How it works</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-12">
           {steps.map((s, i) => (
             <div key={s.label}>
@@ -191,20 +196,20 @@ export default function HomePage() {
       </section>
 
       {/* USSD callout */}
-      <section className="px-6 md:px-16 py-24 border-b border-[#EBE7E0]">
+      <section className="px-6 md:px-16 py-24 border-b border-border">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-6">Works without internet</p>
+            <p className="badge-micropill mb-6">Works without internet</p>
             <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-6">
               Any phone.<br />Any network.<br />Any question.
             </h2>
-            <p className="text-[#7D766D] leading-relaxed max-w-md">
+            <p className="text-body leading-relaxed max-w-md">
               Plana is accessible via USSD on every phone in Uganda — no data, no app download, no account required. Ask a planning question and receive the AI answer by SMS within seconds.
             </p>
           </div>
           <div className="flex flex-col items-start md:items-center gap-8">
-            <div className="w-full max-w-sm bg-[#2D2926] text-[#FDFBF7] rounded-[2rem] p-8">
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/40 mb-3">Dial from any phone</p>
+            <div className="w-full max-w-sm bg-button-bg text-button-text rounded-[2rem] p-8">
+              <p className="badge-micropill text-white/40 mb-3">Dial from any phone</p>
               <p className="text-4xl font-serif font-bold tracking-tight">*384*200253#</p>
               <div className="mt-6 pt-6 border-t border-white/10 space-y-2 text-sm text-white/60">
                 <p>1. Get cost estimate</p>
@@ -213,7 +218,7 @@ export default function HomePage() {
                 <p>4. About Plana</p>
               </div>
             </div>
-            <p className="text-xs text-[#A8A29E] font-medium max-w-sm">
+            <p className="text-xs text-muted font-medium max-w-sm">
               AI answers are delivered by SMS so session timeouts never cut off your response.
             </p>
           </div>
@@ -221,14 +226,14 @@ export default function HomePage() {
       </section>
 
       {/* Provider CTA strip */}
-      <section className="px-6 md:px-16 py-16 border-b border-[#EBE7E0] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <section className="px-6 md:px-16 py-16 border-b border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-2">Service Providers</p>
+          <p className="badge-micropill mb-2">Service Providers</p>
           <h3 className="text-2xl font-serif">Reach clients who are actively budgeting.</h3>
         </div>
         <Link
           href="/providers/join"
-          className="shrink-0 border-2 border-[#2D2926] text-[#2D2926] px-8 py-4 rounded-2xl font-bold text-sm hover:bg-[#2D2926] hover:text-[#FDFBF7] transition-all"
+          className="shrink-0 border-2 border-foreground text-foreground px-8 py-4 rounded-2xl font-bold text-sm hover:bg-button-bg hover:text-button-text transition-all"
         >
           Join as a provider — it is free
         </Link>
@@ -236,27 +241,27 @@ export default function HomePage() {
 
       {/* Final CTA */}
       <section className="px-6 md:px-16 py-32 text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-8">Get started today</p>
+        <p className="badge-micropill mb-8">Get started today</p>
         <h2 className="text-5xl md:text-6xl font-serif leading-tight mb-10 max-w-2xl mx-auto">
           Your next event, planned properly.
         </h2>
         <Link
           href="/login"
-          className="inline-flex items-center justify-center bg-[#2D2926] text-[#FDFBF7] px-10 py-5 rounded-2xl font-bold text-lg hover:bg-[#1A1614] transition-colors"
+          className="inline-flex items-center justify-center bg-button-bg text-button-text px-10 py-5 rounded-2xl font-bold text-lg hover:bg-button-hover transition-colors"
         >
           Start planning free
         </Link>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#EBE7E0] px-6 md:px-16 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="footer-base">
         <span className="text-xl font-serif">Plana</span>
-        <p className="text-xs text-[#A8A29E]">Built for Uganda. 2026.</p>
+        <p className="text-xs text-muted">Built for Uganda. 2026.</p>
         <div className="flex items-center gap-6">
-          <Link href="/providers/join" className="text-xs font-semibold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+          <Link href="/providers/join" className="text-xs font-semibold text-body hover:text-foreground transition-colors">
             For providers
           </Link>
-          <Link href="/login" className="text-xs font-semibold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+          <Link href="/login" className="text-xs font-semibold text-body hover:text-foreground transition-colors">
             Sign in
           </Link>
         </div>

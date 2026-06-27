@@ -41,12 +41,11 @@ export default function Marketplace() {
   const [categoryPhotos, setCategoryPhotos] = useState<Record<string, string>>({});
   const [categoryFilter, setCategoryFilter] = useState('');
   const [requesting, setRequesting] = useState<string | null>(null);
-  const [sent, setSent] = useState<Record<string, string>>({}); // providerId → ref
+  const [sent, setSent] = useState<Record<string, string>>({});
   const [clientPhone, setClientPhone] = useState('');
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [pendingProvider, setPendingProvider] = useState<Provider | null>(null);
 
-  // Derive location and budget from the plan store
   const location = plan?.destination ?? '';
   const budget = plan?.totalBudget ?? null;
   const planType = plan?.type ?? 'Event';
@@ -61,7 +60,6 @@ export default function Marketplace() {
         setProviders(list);
         setLoading(false);
 
-        // Fetch one photo per unique primary category to avoid rate limits
         const uniqueCategories = Array.from(
           new Set(list.map(p => p.category.split(',')[0].trim()))
         );
@@ -79,7 +77,6 @@ export default function Marketplace() {
       });
   }, [location]);
 
-  // Unique categories from loaded providers
   const availableCategories = Array.from(new Set(
     providers.flatMap(p => p.category.split(',').map(c => c.trim()))
   )).sort();
@@ -124,13 +121,13 @@ export default function Marketplace() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FDFBF7] py-12 px-6">
+    <main className="min-h-screen bg-background py-12 px-6">
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
         <header className="mb-10">
-          <h1 className="text-4xl font-serif text-[#2D2926] mb-2">Choose your pros</h1>
-          <p className="text-[#7D766D] text-lg">
+          <h1 className="text-4xl font-serif text-foreground mb-2">Choose your pros</h1>
+          <p className="text-body text-lg">
             Verified providers{location ? ` in ${location}` : ''} — vetted by Plana.
           </p>
         </header>
@@ -140,11 +137,7 @@ export default function Marketplace() {
           <div className="flex flex-wrap gap-2 mb-8">
             <button
               onClick={() => setCategoryFilter('')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${
-                !categoryFilter
-                  ? 'bg-[#2D2926] text-[#FDFBF7] border-[#2D2926]'
-                  : 'bg-white text-[#7D766D] border-[#EBE7E0] hover:border-[#2D2926] hover:text-[#2D2926]'
-              }`}
+              className={`btn-filter ${!categoryFilter ? 'btn-filter-active' : ''}`}
             >
               All
             </button>
@@ -152,11 +145,7 @@ export default function Marketplace() {
               <button
                 key={cat}
                 onClick={() => setCategoryFilter(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${
-                  categoryFilter === cat
-                    ? 'bg-[#2D2926] text-[#FDFBF7] border-[#2D2926]'
-                    : 'bg-white text-[#7D766D] border-[#EBE7E0] hover:border-[#2D2926] hover:text-[#2D2926]'
-                }`}
+                className={`btn-filter ${categoryFilter === cat ? 'btn-filter-active' : ''}`}
               >
                 {cat}
               </button>
@@ -168,13 +157,13 @@ export default function Marketplace() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-24 bg-white rounded-3xl border border-[#EBE7E0] animate-pulse" />
+              <div key={i} className="h-24 bg-surface rounded-3xl border border-border skeleton" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-2xl font-serif text-[#2D2926] mb-3">No providers found.</p>
-            <p className="text-sm text-[#7D766D]">
+            <p className="text-2xl font-serif text-foreground mb-3">No providers found.</p>
+            <p className="text-sm text-body">
               {location
                 ? `We do not have verified providers in ${location} yet. Try removing the location filter.`
                 : 'No verified providers yet. Check back soon.'}
@@ -191,7 +180,7 @@ export default function Marketplace() {
               return (
                 <div
                   key={provider.id}
-                  className="bg-white rounded-3xl border border-[#EBE7E0] shadow-sm hover:border-[#2D2926]/20 transition-all overflow-hidden"
+                  className="card-hover overflow-hidden"
                 >
                   {/* Photo banner */}
                   {photo ? (
@@ -204,33 +193,33 @@ export default function Marketplace() {
                         sizes="(max-width: 672px) 100vw, 672px"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                      <span className="absolute bottom-3 left-4 text-[10px] font-black uppercase tracking-widest text-white/80">
+                      <span className="absolute bottom-3 left-4 badge-micropill text-white/80">
                         {primaryCategory}
                       </span>
                     </div>
                   ) : (
-                    <div className="h-10 w-full bg-[#F4F0E8]" />
+                    <div className="h-10 w-full bg-accent-bg" />
                   )}
 
                   {/* Card body */}
                   <div className="flex items-center justify-between p-6">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1">
-                        <h3 className="font-bold text-[#2D2926]">{provider.name}</h3>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full shrink-0">
+                        <h3 className="font-bold text-foreground">{provider.name}</h3>
+                        <span className="badge-status text-green-700 bg-green-50 border-green-200">
                           Vetted
                         </span>
                       </div>
-                      <p className="text-sm text-[#7D766D] truncate">
+                      <p className="text-sm text-body truncate">
                         {provider.category} · {provider.location}
                       </p>
                       {(provider.price_min || provider.price_max) && (
-                        <p className="text-xs text-[#A8A29E] mt-1">
+                        <p className="text-xs text-muted mt-1">
                           UGX {provider.price_min ? fmt(provider.price_min) : '—'} – {provider.price_max ? fmt(provider.price_max) : '—'}
                         </p>
                       )}
                       {provider.description && (
-                        <p className="text-xs text-[#A8A29E] mt-1 line-clamp-1">{provider.description}</p>
+                        <p className="text-xs text-muted mt-1 line-clamp-1">{provider.description}</p>
                       )}
                       {wasSent && (
                         <p className="text-xs text-green-700 font-semibold mt-2">
@@ -241,12 +230,12 @@ export default function Marketplace() {
 
                     <div className="ml-4 shrink-0">
                       {wasSent ? (
-                        <span className="text-xs font-bold text-[#A8A29E]">Sent</span>
+                        <span className="text-xs font-bold text-muted">Sent</span>
                       ) : (
                         <button
                           onClick={() => openQuoteModal(provider)}
                           disabled={isRequesting}
-                          className="px-6 py-3 bg-[#2D2926] text-[#FDFBF7] rounded-xl font-bold text-sm hover:bg-[#1A1614] transition-colors disabled:opacity-50"
+                          className="px-6 py-3 bg-button-bg text-button-text rounded-xl font-bold text-sm hover:bg-button-hover transition-colors disabled:opacity-50"
                         >
                           {isRequesting ? 'Sending...' : 'Get Quote'}
                         </button>
@@ -262,29 +251,29 @@ export default function Marketplace() {
 
       {/* Phone modal */}
       {showPhoneModal && pendingProvider && (
-        <div className="fixed inset-0 bg-[#2D2926]/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="bg-white rounded-[2rem] border border-[#EBE7E0] p-8 max-w-sm w-full shadow-2xl">
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-3">Quote request</p>
-            <h3 className="text-2xl font-serif text-[#2D2926] mb-1">{pendingProvider.name}</h3>
-            <p className="text-sm text-[#7D766D] mb-6">
+        <div className="modal-overlay">
+          <div className="bg-surface rounded-[2rem] border border-border p-8 max-w-sm w-full shadow-2xl">
+            <p className="badge-micropill mb-3">Quote request</p>
+            <h3 className="text-2xl font-serif text-foreground mb-1">{pendingProvider.name}</h3>
+            <p className="text-sm text-body mb-6">
               We will SMS this provider with your event details. Add your phone number so they can reach you back.
             </p>
             <input
               value={clientPhone}
               onChange={e => setClientPhone(e.target.value)}
               placeholder="+256 700 000 000 (optional)"
-              className="w-full p-4 bg-[#FDFBF7] rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm mb-4"
+              className="input-base mb-4"
             />
             <div className="flex gap-3">
               <button
                 onClick={sendQuote}
-                className="flex-1 bg-[#2D2926] text-[#FDFBF7] py-4 rounded-2xl font-bold text-sm hover:bg-[#1A1614] transition-colors"
+                className="flex-1 bg-button-bg text-button-text py-4 rounded-2xl font-bold text-sm hover:bg-button-hover transition-colors"
               >
                 Send quote request
               </button>
               <button
                 onClick={() => { setShowPhoneModal(false); setPendingProvider(null); setClientPhone(''); }}
-                className="px-5 py-4 border-2 border-[#EBE7E0] text-[#7D766D] rounded-2xl font-bold text-sm hover:border-[#2D2926] transition-colors"
+                className="px-5 py-4 border-2 border-border text-body rounded-2xl font-bold text-sm hover:border-foreground transition-colors"
               >
                 Cancel
               </button>

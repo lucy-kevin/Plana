@@ -1,4 +1,3 @@
-// components/breakdown/BudgetBar.tsx
 'use client';
 import { usePlanStore } from '@/frontend/store/planaStore';
 import { getBudgetBarStatus } from '@/frontend/lib/calculations';
@@ -20,7 +19,6 @@ export const BudgetBar = () => {
         <span className={status.color.replace('bg-', 'text-')}>{status.label}</span>
       </div>
       
-      {/* The Progress Bar */}
       <div className="h-4 w-full bg-gray-200 rounded-full overflow-hidden">
         <div 
           className={`h-full transition-all duration-500 ${status.color}`}

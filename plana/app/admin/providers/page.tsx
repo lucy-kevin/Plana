@@ -56,23 +56,21 @@ export default function AdminProvidersPage() {
   const pendingCount = providers.filter((p) => !p.verified).length;
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2D2926] font-sans">
+    <div className="min-h-screen bg-background text-foreground">
 
       {/* Toast */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#2D2926] text-[#FDFBF7] px-6 py-3 rounded-2xl text-sm font-semibold shadow-xl">
-          {toast}
-        </div>
+        <div className="toast">{toast}</div>
       )}
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-16 py-5 border-b border-[#EBE7E0] bg-[#FDFBF7]/90 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="nav-bar">
         <div className="flex items-center gap-4">
           <Link href="/" className="text-2xl font-serif tracking-tight">Plana</Link>
-          <span className="text-xs font-black uppercase tracking-widest text-[#A8A29E] border border-[#EBE7E0] px-3 py-1 rounded-full">Admin</span>
+          <span className="badge-micropill border border-border px-3 py-1 rounded-full">Admin</span>
         </div>
         {pendingCount > 0 && (
-          <span className="text-xs font-bold bg-[#2D2926] text-[#FDFBF7] px-3 py-1.5 rounded-full">
+          <span className="text-xs font-bold bg-button-bg text-button-text px-3 py-1.5 rounded-full">
             {pendingCount} pending
           </span>
         )}
@@ -82,7 +80,7 @@ export default function AdminProvidersPage() {
 
         {/* Header */}
         <div className="mb-12">
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-3">Provider management</p>
+          <p className="badge-micropill mb-3">Provider management</p>
           <h1 className="text-4xl font-serif">Service Providers</h1>
         </div>
 
@@ -92,11 +90,7 @@ export default function AdminProvidersPage() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold border-2 transition-all ${
-                filter === f
-                  ? 'bg-[#2D2926] text-[#FDFBF7] border-[#2D2926]'
-                  : 'bg-white text-[#7D766D] border-[#EBE7E0] hover:border-[#2D2926] hover:text-[#2D2926]'
-              }`}
+              className={`btn-filter ${filter === f ? 'btn-filter-active' : ''}`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
               {f === 'pending' && pendingCount > 0 && (
@@ -108,37 +102,37 @@ export default function AdminProvidersPage() {
 
         {/* Table */}
         {loading ? (
-          <p className="text-[#A8A29E] text-sm font-medium">Loading...</p>
+          <p className="text-muted text-sm font-medium">Loading...</p>
         ) : filtered.length === 0 ? (
-          <p className="text-[#A8A29E] text-sm font-medium">
+          <p className="text-muted text-sm font-medium">
             {filter === 'pending' ? 'No pending registrations.' : 'No providers found.'}
           </p>
         ) : (
-          <div className="divide-y divide-[#EBE7E0]">
+          <div className="divide-y divide-border">
             {filtered.map((provider) => (
               <div key={provider.id} className="py-6 grid md:grid-cols-4 gap-4 items-start">
 
                 {/* Identity */}
                 <div className="md:col-span-2">
                   <div className="flex items-center gap-3 mb-1">
-                    <p className="font-bold text-[#2D2926]">{provider.name}</p>
+                    <p className="font-bold text-foreground">{provider.name}</p>
                     {provider.verified ? (
-                      <span className="text-[10px] font-black uppercase tracking-widest text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
+                      <span className="badge-status text-green-700 bg-green-50 border-green-200">
                         Live
                       </span>
                     ) : (
-                      <span className="text-[10px] font-black uppercase tracking-widest text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                      <span className="badge-status text-amber-700 bg-amber-50 border-amber-200">
                         Pending
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-[#7D766D] mb-0.5">{provider.phone}</p>
-                  <p className="text-xs text-[#A8A29E]">{provider.category} · {provider.location}</p>
+                  <p className="text-sm text-body mb-0.5">{provider.phone}</p>
+                  <p className="text-xs text-muted">{provider.category} · {provider.location}</p>
                   {provider.description && (
-                    <p className="text-xs text-[#7D766D] mt-2 leading-relaxed max-w-sm">{provider.description}</p>
+                    <p className="text-xs text-body mt-2 leading-relaxed max-w-sm">{provider.description}</p>
                   )}
                   {provider.website && (
-                    <p className="text-xs text-[#A8A29E] mt-1">{provider.website}</p>
+                    <p className="text-xs text-muted mt-1">{provider.website}</p>
                   )}
                 </div>
 
@@ -146,17 +140,17 @@ export default function AdminProvidersPage() {
                 <div>
                   {provider.price_min || provider.price_max ? (
                     <>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-1">Price range</p>
-                      <p className="text-sm font-semibold text-[#2D2926]">
+                      <p className="badge-micropill mb-1">Price range</p>
+                      <p className="text-sm font-semibold text-foreground">
                         {provider.price_min ? `UGX ${Number(provider.price_min).toLocaleString()}` : '—'}
                         {' — '}
                         {provider.price_max ? `UGX ${Number(provider.price_max).toLocaleString()}` : '—'}
                       </p>
                     </>
                   ) : (
-                    <p className="text-xs text-[#A8A29E]">No price set</p>
+                    <p className="text-xs text-muted">No price set</p>
                   )}
-                  <p className="text-[10px] text-[#C4BAB0] mt-3">
+                  <p className="text-[10px] text-muted-lighter mt-3">
                     {new Date(provider.created_at).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </p>
                 </div>
@@ -167,12 +161,12 @@ export default function AdminProvidersPage() {
                     <button
                       onClick={() => approve(provider)}
                       disabled={approving === provider.id}
-                      className="bg-[#2D2926] text-[#FDFBF7] px-6 py-3 rounded-xl text-xs font-bold hover:bg-[#1A1614] transition-colors disabled:opacity-50"
+                      className="bg-button-bg text-button-text px-6 py-3 rounded-xl text-xs font-bold hover:bg-button-hover transition-colors disabled:opacity-50"
                     >
                       {approving === provider.id ? 'Approving...' : 'Approve & notify'}
                     </button>
                   ) : (
-                    <span className="text-xs text-[#A8A29E] font-medium">Approved</span>
+                    <span className="text-xs text-muted font-medium">Approved</span>
                   )}
                 </div>
 

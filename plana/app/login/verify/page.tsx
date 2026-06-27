@@ -17,16 +17,16 @@ export default function VerifyPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-6">
-      <div className="max-w-md w-full bg-white p-10 rounded-[2rem] border border-[#EBE7E0]">
+    <main className="min-h-screen bg-background flex items-center justify-center p-6">
+      <div className="max-w-md w-full bg-surface p-10 rounded-[2rem] border border-border">
         <h2 className="text-2xl font-serif mb-6">Verify your number</h2>
         <input 
           type="text" 
           placeholder="Enter 6-digit code"
-          className="w-full p-4 bg-[#F9F7F4] rounded-xl mb-4 text-center tracking-widest text-2xl"
+          className="w-full p-4 bg-input-bg rounded-xl mb-4 text-center tracking-widest text-2xl"
           onChange={(e) => setCode(e.target.value)}
         />
-        <button onClick={handleVerify} className="w-full bg-[#2D2926] text-white py-4 rounded-xl font-bold">
+        <button onClick={handleVerify} className="w-full bg-button-bg text-white py-4 rounded-xl font-bold">
           Verify & Login
         </button>
       </div>

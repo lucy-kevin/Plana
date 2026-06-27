@@ -116,93 +116,77 @@ export default function DynamicDetails() {
 
   const canProceed = location.trim().length > 0;
 
-  // Helper to handle input changes
   const handleAnswer = (id: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
   return (
-    <main className="min-h-screen bg-[#FDFBF7] py-16 px-6 font-sans">
+    <main className="min-h-screen bg-background py-16 px-6">
       <div className="max-w-md mx-auto">
 
         <div className="mb-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-4 capitalize">
-            {decodeURIComponent(plantype).replace(/-/g, ' ')}
+          <p className="badge-micropill mb-4">
+            {plantype.replace('-', ' ')}
           </p>
-          <h1 className="text-4xl font-serif text-[#2D2926] leading-tight mb-3">
-            Tell us about your {decodeURIComponent(plantype).replace(/-/g, ' ')}.
+          <h1 className="text-4xl font-serif text-foreground leading-tight mb-3">
+            Tell us about your plan.
           </h1>
-          <p className="text-[#7D766D] text-base leading-relaxed">
-            A few details help Plana AI build a savings plan that actually fits your situation.
+          <p className="text-body text-base leading-relaxed">
+            A few details help Plana AI build a budget that actually fits your situation.
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-[2rem] border border-[#EBE7E0] shadow-sm space-y-6">
+        <div className="bg-surface p-8 rounded-[2rem] border border-border shadow-sm space-y-6">
 
           {/* Core fields */}
           <div>
-            <label className="block text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-2">Location *</label>
+            <label className="block badge-micropill mb-2">Location *</label>
             <input
               value={location}
               onChange={e => setLocation(e.target.value)}
               placeholder="e.g. Kampala, Entebbe, Wakiso"
-              className="w-full p-4 bg-[#F9F7F4] rounded-2xl font-medium text-[#2D2926] border-2 border-transparent focus:border-[#2D2926] outline-none transition-all text-sm"
+              className="input-ghost"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-2">Guests</label>
+              <label className="block badge-micropill mb-2">Guests</label>
               <input
                 type="number"
                 value={guestCount}
                 onChange={e => setGuestCount(e.target.value)}
                 placeholder="e.g. 150"
-                className="w-full p-4 bg-[#F9F7F4] rounded-2xl font-medium text-[#2D2926] border-2 border-transparent focus:border-[#2D2926] outline-none transition-all text-sm"
+                className="input-ghost"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-2">Event date</label>
+              <label className="block badge-micropill mb-2">Event date</label>
               <input
                 type="date"
                 value={eventDate}
                 onChange={e => setEventDate(e.target.value)}
-                className="w-full p-4 bg-[#F9F7F4] rounded-2xl font-medium text-[#2D2926] border-2 border-transparent focus:border-[#2D2926] outline-none transition-all text-sm"
+                className="input-ghost"
               />
             </div>
           </div>
 
           {/* AI questions — animated loading, no repetition */}
           {loading ? (
-            <div className="py-4 text-center">
-              <p className="text-sm font-semibold text-[#7D766D] transition-all duration-500">
-                {phrases[phraseIdx]}
-              </p>
-              <div className="flex justify-center gap-1 mt-3">
-                {[0, 1, 2].map(i => (
-                  <div
-                    key={i}
-                    className="w-1.5 h-1.5 rounded-full bg-[#2D2926] opacity-30"
-                    style={{ animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite` }}
-                  />
-                ))}
-              </div>
-              <style>{`
-                @keyframes pulse {
-                  0%, 100% { opacity: 0.2; transform: scale(1); }
-                  50% { opacity: 1; transform: scale(1.3); }
-                }
-              `}</style>
+            <div className="space-y-4">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-16 skeleton" />
+              ))}
             </div>
           ) : (
             questions.map((q, i) => (
               <div key={i}>
-                <label className="block text-xs font-bold text-[#7D766D] mb-2 leading-relaxed">{q}</label>
+                <label className="block text-xs font-bold text-body mb-2 leading-relaxed">{q}</label>
                 <input
                   value={answers[`q${i}`] ?? ''}
                   onChange={e => setAnswers(prev => ({ ...prev, [`q${i}`]: e.target.value }))}
                   placeholder="Your answer..."
-                  className="w-full p-4 bg-[#F9F7F4] rounded-2xl font-medium text-[#2D2926] border-2 border-transparent focus:border-[#2D2926] outline-none transition-all text-sm"
+                  className="input-ghost"
                 />
               </div>
             ))
@@ -211,13 +195,13 @@ export default function DynamicDetails() {
           <button
             onClick={proceed}
             disabled={!canProceed}
-            className="w-full bg-[#2D2926] text-[#FDFBF7] py-5 rounded-2xl font-bold text-base hover:bg-[#1A1614] disabled:opacity-40 transition-all"
+            className="btn-primary"
           >
             Set my budget
           </button>
         </div>
 
-        <p className="text-center text-[#B5AEA7] text-xs mt-8 font-medium">Powered by Plana AI</p>
+        <p className="text-center text-muted-lighter text-xs mt-8 font-medium">Powered by Plana AI</p>
       </div>
     </main>
   );

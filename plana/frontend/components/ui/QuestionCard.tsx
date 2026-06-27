@@ -16,8 +16,8 @@ export default function QuestionCard({
   type = 'text' 
 }: QuestionCardProps) {
   return (
-    <div className="group bg-white p-8 rounded-[2rem] border border-[#EBE7E0] hover:border-[#2D2926]/20 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-      <label className="block text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-4">
+    <div className="group bg-surface p-8 rounded-[2rem] border border-border hover:border-foreground/20 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+      <label className="block badge-micropill mb-4">
         {label}
       </label>
       <input 
@@ -25,7 +25,7 @@ export default function QuestionCard({
         value={value}
         onChange={(e) => onChange(type === 'number' ? Number(e.target.value) : e.target.value)}
         placeholder={placeholder}
-        className="w-full text-2xl font-serif text-[#2D2926] bg-transparent outline-none placeholder:text-[#D1CBC5] focus:ring-0"
+        className="w-full text-2xl font-serif text-foreground bg-transparent outline-none placeholder:text-muted-lighter focus:ring-0"
       />
     </div>
   );

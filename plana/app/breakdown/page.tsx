@@ -134,6 +134,42 @@ export default function AIPlanningBreakdown() {
           )}
         </div>
 
+        {/* Savings advice — shown first because saving is the goal */}
+        {(savingsAdvice || weeklyTarget) && (
+          <div className="bg-[#2D2926] rounded-[2rem] p-8 mb-8 text-[#FDFBF7]">
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-4">How to reach this goal</p>
+            {weeklyTarget && (
+              <p className="text-3xl font-serif mb-3">
+                UGX {weeklyTarget.toLocaleString()} <span className="text-lg font-sans text-white/60">/ week</span>
+              </p>
+            )}
+            {savingsAdvice && (
+              <p className="text-sm text-white/70 leading-relaxed">{savingsAdvice}</p>
+            )}
+          </div>
+        )}
+
+        {/* Budget usage bar */}
+        <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-[#EBE7E0] mb-8">
+          <div className="flex justify-between items-end mb-4">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E]">Budget usage</span>
+            <span className={`text-2xl font-bold ${isOver ? 'text-[#B45309]' : 'text-[#2D2926]'}`}>
+              {budget > 0 ? ((totalAllocated / budget) * 100).toFixed(0) : 0}%
+            </span>
+          </div>
+          <div className="h-3 bg-[#F9F7F4] rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all duration-700 rounded-full ${isOver ? 'bg-[#B45309]' : 'bg-[#2D2926]'}`}
+              style={{ width: `${Math.min((totalAllocated / budget) * 100, 100)}%` }}
+            />
+          </div>
+          {isOver && (
+            <p className="text-xs text-[#B45309] font-semibold mt-3">
+              Over budget by UGX {(totalAllocated - budget).toLocaleString()}. Adjust the amounts below.
+            </p>
+          )}
+        </div>
+
         {/* Category list */}
         <div className="space-y-3 mb-8">
           {items.map((item, idx) => (
@@ -158,21 +194,6 @@ export default function AIPlanningBreakdown() {
             </div>
           ))}
         </div>
-
-        {/* Savings advice */}
-        {(savingsAdvice || weeklyTarget) && (
-          <div className="bg-[#2D2926] rounded-[2rem] p-8 mb-8 text-[#FDFBF7]">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-4">Savings advice</p>
-            {weeklyTarget && (
-              <p className="text-3xl font-serif mb-3">
-                UGX {weeklyTarget.toLocaleString()} <span className="text-lg font-sans text-white/60">/ week</span>
-              </p>
-            )}
-            {savingsAdvice && (
-              <p className="text-sm text-white/70 leading-relaxed">{savingsAdvice}</p>
-            )}
-          </div>
-        )}
 
         {error && (
           <p className="text-sm font-semibold text-red-700 bg-red-50 border border-red-100 p-4 rounded-2xl mb-6">{error}</p>

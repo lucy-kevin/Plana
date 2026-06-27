@@ -149,36 +149,23 @@ export default function AIPlanningBreakdown() {
           </div>
         )}
 
-        {/* Budget usage bar */}
-        <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-[#EBE7E0] mb-8">
-          <div className="flex justify-between items-end mb-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E]">Budget usage</span>
-            <span className={`text-2xl font-bold ${isOver ? 'text-[#B45309]' : 'text-[#2D2926]'}`}>
-              {budget > 0 ? ((totalAllocated / budget) * 100).toFixed(0) : 0}%
-            </span>
-          </div>
-          <div className="h-3 bg-[#F9F7F4] rounded-full overflow-hidden">
-            <div
-              className={`h-full transition-all duration-700 rounded-full ${isOver ? 'bg-[#B45309]' : 'bg-[#2D2926]'}`}
-              style={{ width: `${Math.min((totalAllocated / budget) * 100, 100)}%` }}
-            />
-          </div>
-          {isOver && (
-            <p className="text-xs text-[#B45309] font-semibold mt-3">
-              Over budget by UGX {(totalAllocated - budget).toLocaleString()}. Adjust the amounts below.
-            </p>
-          )}
-        </div>
-
         {/* Category list */}
-        <div className="space-y-3 mb-8">
+        <div className="space-y-3 mb-4">
           {items.map((item, idx) => (
-            <div key={idx} className="flex items-center justify-between p-6 bg-white rounded-3xl border border-[#EBE7E0] hover:border-[#2D2926]/20 transition-all">
-              <div>
-                <span className="font-bold text-[#2D2926]">{item.category}</span>
-                {item.tip && <p className="text-xs text-[#A8A29E] mt-0.5 max-w-xs">{item.tip}</p>}
+            <div key={idx} className="flex items-center justify-between p-6 bg-white rounded-3xl border border-[#EBE7E0] hover:border-[#2D2926]/20 transition-all group">
+              <div className="flex-1 min-w-0 mr-4">
+                <input
+                  value={item.category}
+                  onChange={e => {
+                    const updated = [...items];
+                    updated[idx] = { ...updated[idx], category: e.target.value };
+                    setItems(updated);
+                  }}
+                  className="font-bold text-[#2D2926] bg-transparent outline-none w-full border-b-2 border-transparent focus:border-[#2D2926]/20 transition-all text-sm"
+                />
+                {item.tip && <p className="text-xs text-[#A8A29E] mt-0.5 leading-relaxed">{item.tip}</p>}
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 shrink-0">
                 <span className="text-[#A8A29E] font-medium text-sm">UGX</span>
                 <input
                   type="number"
@@ -190,10 +177,23 @@ export default function AIPlanningBreakdown() {
                     setItems(updated);
                   }}
                 />
+                <button
+                  onClick={() => setItems(items.filter((_, i) => i !== idx))}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity text-[#A8A29E] hover:text-red-500 font-bold text-lg leading-none ml-1"
+                  title="Remove"
+                >×</button>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Add a custom line item */}
+        <button
+          onClick={() => setItems([...items, { category: 'New item', amount: 0, percentage: 0 }])}
+          className="w-full mb-8 py-4 rounded-3xl border-2 border-dashed border-[#EBE7E0] text-[#A8A29E] hover:border-[#2D2926] hover:text-[#2D2926] font-bold text-sm transition-all"
+        >
+          + Add item
+        </button>
 
         {error && (
           <p className="text-sm font-semibold text-red-700 bg-red-50 border border-red-100 p-4 rounded-2xl mb-6">{error}</p>

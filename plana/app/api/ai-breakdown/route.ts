@@ -1,8 +1,8 @@
-import { model } from '@/lib/ai';
+import { generateWithRetry } from '@/lib/ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-function getFallback(type: string, budget: number) {
-  const t = type.toLowerCase();
+function getFallback(type: string | undefined, budget: number) {
+  const t = (type ?? '').toLowerCase();
 
   let categories: { category: string; percentage: number; tip: string }[];
 
@@ -80,27 +80,30 @@ function getFallback(type: string, budget: number) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { type, location, currency, guestCount } = body;
+  // Accept both 'type' and 'planType' (breakdown page sends planType)
+  const type: string = body.type ?? body.planType ?? 'event';
+  const location: string = body.location ?? '';
+  const currency: string = body.currency ?? 'UGX';
+  const guestCount: number | undefined = body.guestCount;
   const budget = Number(body.budget);
 
   console.log('[ai-breakdown] received:', { type, location, budget, currency, guestCount });
 
-  const prompt = `Budget planner. Event: "${type}" in ${location}. Budget: ${currency} ${budget}${guestCount ? `, ${guestCount} guests` : ''}.
+  const prompt = `Budget planner. Event: "${type}" in ${location || 'Uganda'}. Budget: ${currency} ${budget}${guestCount ? `, ${guestCount} guests` : ''}.
 
 Return a raw JSON array (5-8 items) of realistic spending categories for this specific event type. No markdown.
-[{"id":"cat-1","category":"string","percentage":number,"amount":number,"typicalMin":number,"typicalMax":number,"tip":"specific tip with real ${location} vendor or place names","source":"string"}]
+[{"id":"cat-1","category":"string","percentage":number,"amount":number,"typicalMin":number,"typicalMax":number,"tip":"specific tip with real ${location || 'Uganda'} vendor or place names","source":"string"}]
 
 Rules: percentages total 100. amount=(percentage/100)*${budget}. typicalMin=amount*0.75. typicalMax=amount*1.3.`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    console.log('[ai-breakdown] gemini raw:', text.slice(0, 300));
+    const text = await generateWithRetry(prompt);
+    console.log('[ai-breakdown] raw:', text.slice(0, 300));
     const clean = text.replace(/```json[\s\S]*?```|```/g, '').trim();
-    const items = JSON.parse(clean);
-    return NextResponse.json({ items });
+    const breakdown = JSON.parse(clean);
+    return NextResponse.json({ breakdown });
   } catch (err) {
     console.error('[ai-breakdown] error:', err);
-    return NextResponse.json({ items: getFallback(type, budget) });
+    return NextResponse.json({ breakdown: getFallback(type, budget) });
   }
 }

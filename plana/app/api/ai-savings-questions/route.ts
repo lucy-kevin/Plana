@@ -1,61 +1,67 @@
-import { model } from '@/lib/ai';
+import { generateWithRetry } from '@/lib/ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Sensible fallback questions that apply to any plan type
-function getFallback(type: string) {
-  return [
-    {
-      id: 'q1',
-      question: 'What is your monthly take-home income?',
-      placeholder: 'e.g. UGX 50,000',
-      key: 'monthlyIncome',
-      type: 'number',
-    },
-    {
-      id: 'q2',
-      question: 'What are your total monthly expenses (rent, food, transport, bills)?',
-      placeholder: 'e.g. UGX 30,000',
-      key: 'monthlyExpenses',
-      type: 'number',
-    },
-    {
-      id: 'q3',
-      question: 'How do you currently save money?',
-      placeholder: 'e.g. M-PESA lock savings, bank account, chama, cash at home',
-      key: 'savingsMethod',
-      type: 'text',
-    },
-    {
-      id: 'q4',
-      question: 'Are you saving alone or with others (partner, family, chama)?',
-      placeholder: 'e.g. Alone, With partner, Family chama of 5 people',
-      key: 'savingsWith',
-      type: 'text',
-    },
-    {
-      id: 'q5',
-      question: `Is the date for your ${type} flexible or fixed?`,
-      placeholder: 'e.g. Fixed date, Can shift by 2 months',
-      key: 'dateFlexibility',
-      type: 'text',
-    },
-  ];
+const fallbacks: Record<string, string[]> = {
+  wedding: [
+    'Are you saving alone or with your partner/family?',
+    'What is your biggest concern about the wedding budget?',
+    'Do you already have a caterer or photographer in mind?',
+    'Will you need accommodation for out-of-town guests?',
+    'Are you planning a honeymoon as part of this budget?',
+  ],
+  trip: [
+    'How many nights will you be away?',
+    'Will you need to book flights?',
+    'Are you planning to hire a vehicle or use public transport?',
+    'Will you need travel insurance?',
+    'Are you saving alone or splitting costs with others?',
+  ],
+  birthday: [
+    'Will there be a DJ or live entertainment?',
+    'Do you want a custom cake?',
+    'Are you hiring a venue or using a home/garden?',
+    'Will you need a photographer?',
+    'Are you saving alone or with family?',
+  ],
+  corporate: [
+    'Is this an internal team event or a client-facing function?',
+    'Will you need audio-visual equipment?',
+    'Are meals and refreshments included in the plan?',
+    'Will speakers or facilitators need to be paid?',
+    'Is accommodation required for any attendees?',
+  ],
+  default: [
+    'Are you saving alone or with others?',
+    'What is the most important part of this event for you?',
+    'Do you have any existing savings toward this goal?',
+    'Will you need to hire any outside services or vendors?',
+    'Is there any part of the budget you are most worried about?',
+  ],
+};
+
+function getFallback(type: string): string[] {
+  return fallbacks[type?.toLowerCase()] ?? fallbacks.default;
 }
 
 export async function POST(req: NextRequest) {
-  const { type, location, budget, currency, monthsLeft } = await req.json();
+  const { planType } = await req.json();
+  const type = planType ?? 'event';
 
-  const prompt = `Savings coach. User is saving for: "${type}" in ${location}. Goal: ${currency} ${budget} in ${monthsLeft} months.
-
-Generate 5 short friendly questions to understand their income, expenses, savings method, who they save with, and any event-specific constraints.
-Return raw JSON only, no markdown:
-[{"id":"q1","question":"string","placeholder":"example answer","key":"camelCaseKey","type":"text or number"}]`;
+  const prompt = `You are a savings coach for Uganda. A user is planning a ${type}.
+Generate exactly 5 short, friendly questions to understand their situation and give personalised savings advice.
+DO NOT ask about: location, venue, city, number of guests, date, month, timeline, budget amount, or savings goal — those are already collected separately.
+Focus on: who they are saving with, vendor choices, existing savings, priorities, concerns, special requirements.
+Return a JSON array of plain strings only. No objects, no keys, no markdown. Example:
+["Question one?","Question two?","Question three?","Question four?","Question five?"]`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    const clean = text.replace(/```json[\s\S]*?```|```/g, '').trim();
-    const questions = JSON.parse(clean);
+    const text = await generateWithRetry(prompt);
+    const clean = text.replace(/```json[\s\S]*?```|```[\s\S]*?```|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    // Ensure we always return an array of strings
+    const questions: string[] = Array.isArray(parsed)
+      ? parsed.map((q: unknown) => (typeof q === 'string' ? q : (q as { question?: string })?.question ?? String(q)))
+      : getFallback(type);
     return NextResponse.json({ questions });
   } catch (err) {
     console.error('[ai-savings-questions] error:', err);

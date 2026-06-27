@@ -60,17 +60,17 @@ export default function HomePage() {
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-16 py-5 border-b border-[#EBE7E0] bg-[#FDFBF7]/90 backdrop-blur-sm sticky top-0 z-50">
-        <span className="text-2xl font-serif tracking-tight">Plana</span>
+        <span className="text-2xl font-serif tracking-tight text-[#3d1b00]">Plana</span>
         <div className="flex items-center gap-6">
-          <Link href="/providers/join" className="hidden sm:block text-sm font-semibold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+          <Link href="/providers/join" className="hidden sm:block text-sm font-semibold text-[#7a3700] hover:text-[#2D2926] transition-colors">
             For Providers
           </Link>
-          <Link href="/login" className="text-sm font-semibold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+          <Link href="/login" className="text-sm font-semibold text-[#7a3700] hover:text-[#2D2926] transition-colors">
             Sign in
           </Link>
           <Link
             href="/login"
-            className="bg-[#2D2926] text-[#FDFBF7] px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#1A1614] transition-colors"
+            className="bg-[#3d1b00] text-[#FDFBF7] px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#1A1614] transition-colors"
           >
             Get started
           </Link>
@@ -93,13 +93,13 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center bg-[#2D2926] text-[#FDFBF7] px-8 py-4 rounded-2xl font-bold text-base hover:bg-[#1A1614] transition-colors"
+              className="inline-flex items-center justify-center bg-[#3d1b00] text-[#FDFBF7] px-8 py-4 rounded-2xl font-bold text-base hover:bg-[#1A1614] transition-colors"
             >
               Start planning free
             </Link>
             <Link
               href="/providers/join"
-              className="inline-flex items-center justify-center border-2 border-[#EBE7E0] text-[#2D2926] px-8 py-4 rounded-2xl font-bold text-base hover:border-[#2D2926] transition-colors"
+              className="inline-flex items-center justify-center border-2 border-[#EBE7E0] text-[#3d1b00] px-8 py-4 rounded-2xl font-bold text-base hover:border-[#2D2926] transition-colors"
             >
               Join as provider
             </Link>
@@ -130,7 +130,7 @@ export default function HomePage() {
                   </div>
                   <div className="h-1.5 w-full bg-[#F4F0E8] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#2D2926] rounded-full"
+                      className="h-full bg-[#7a3700] rounded-full"
                       style={{ width: `${item.pct}%` }}
                     />
                   </div>

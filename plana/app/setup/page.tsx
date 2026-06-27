@@ -1,12 +1,27 @@
-// app/setup/page.tsx
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PLAN_TYPES } from '@/frontend/types/planTypes'; // Importing the dynamic data
+import { usePlanStore } from '@/frontend/store/planaStore'; // Import the store
+import { PLAN_TYPES } from '@/frontend/types/planTypes'; 
 
 export default function PlanSetup() {
   const [selected, setSelected] = useState<string | null>(null);
   const router = useRouter();
+  const setPlan = usePlanStore((state) => state.setPlan); // Access the store
+
+  const handleNext = () => {
+    if (selected) {
+      setPlan({ 
+        id: Math.random().toString(),
+        type: selected as any, 
+        items: [],
+        totalBudget: 0,
+        destination: '', // Required by Plan interface
+        createdAt: new Date()
+      });
+      router.push('/budget');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] p-6 flex flex-col items-center justify-center">
@@ -32,7 +47,7 @@ export default function PlanSetup() {
 
         <button 
           disabled={!selected}
-          onClick={() => router.push('/budget')} 
+          onClick={handleNext} // Call the logic function
           className="w-full mt-8 bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-gray-800 disabled:opacity-50 transition"
         >
           Continue

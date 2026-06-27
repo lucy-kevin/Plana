@@ -3,68 +3,49 @@ import { useState } from 'react';
 
 export default function LoginPage() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
-  const [loading, setLoading] = useState(false);
-
-  const handleAction = () => {
-    setLoading(true);
-    setTimeout(() => {
-      if (step === 'phone') setStep('otp');
-      setLoading(false);
-    }, 1000);
-  };
-
+  
   return (
-    // Applied the "Warm Cream" background with subtle organic gradient glows
-    <div className="min-h-screen flex items-center justify-center p-6 font-sans relative overflow-hidden bg-[#FAF9F6]">
-      {/* Background Organic Glows */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] bg-indigo-200/30 rounded-full blur-3xl"></div>
-        <div className="absolute top-[40%] -right-[10%] w-[400px] h-[400px] bg-amber-200/20 rounded-full blur-3xl"></div>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#FDFBF7] relative overflow-hidden font-sans">
+      {/* Dynamic Background Glows */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute -top-[20%] -left-[10%] w-[700px] h-[700px] bg-indigo-100/40 rounded-full blur-[140px] animate-pulse"></div>
+        <div className="absolute bottom-[0%] -right-[10%] w-[600px] h-[600px] bg-amber-100/50 rounded-full blur-[140px]"></div>
       </div>
 
-      {/* Main Glassmorphic Card */}
-      <div className="relative z-10 w-full max-w-md bg-white/70 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-2xl shadow-indigo-500/10 border border-white/50">
-        <div className="mb-8 text-center">
-          <div className="w-16 h-16 bg-indigo-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-            <span className="text-white text-2xl font-bold">P</span>
+      {/* Main Card */}
+      <div className="relative z-10 w-full max-w-md bg-white/80 backdrop-blur-2xl p-10 rounded-[3rem] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.1)] border border-white/50">
+        
+        <div className="text-center mb-10">
+          <div className="inline-block px-4 py-1 mb-4 rounded-full bg-[#2D2926]/5 text-[#2D2926] text-[10px] font-black uppercase tracking-[0.2em]">
+            Your Personal Planning Assistant
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
-            Welcome to Plana
-          </h1>
-          <p className="text-gray-500 mt-3 text-base font-medium">
+          <h1 className="text-5xl font-serif text-[#2D2926] tracking-tight">Plana</h1>
+          <p className="text-[#7D766D] mt-4 font-medium max-w-[240px] mx-auto leading-relaxed">
             {step === 'phone' 
-              ? 'Enter your number to access your plans.' 
-              : 'Enter the 6-digit code sent to your phone.'}
+              ? 'Enter your phone number to start your journey.' 
+              : 'Check your messages for the 6-digit code.'}
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           <input 
-            type={step === 'phone' ? 'tel' : 'text'} 
-            placeholder={step === 'phone' ? "+256 700 000000" : "000 000"}
-            className="w-full p-5 text-lg rounded-2xl border-none bg-white/60 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-300 text-center shadow-inner"
+            placeholder={step === 'phone' ? '+256 700 000 000' : '000 000'}
+            className="w-full p-6 text-center text-2xl font-bold bg-white rounded-3xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] focus:ring-4 focus:ring-[#2D2926]/5 transition-all shadow-inner"
           />
           
-          <button 
-            onClick={handleAction}
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-5 rounded-2xl font-bold text-lg active:scale-[0.98] transition-all duration-300 shadow-xl shadow-indigo-500/20 flex items-center justify-center"
-          >
-            {loading ? (
-              <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-            ) : (
-              step === 'phone' ? "Send Secure Code" : "Verify & Enter Plana"
-            )}
+          <button className="w-full bg-[#2D2926] text-white py-6 rounded-3xl font-bold text-lg hover:scale-[1.01] transition-all duration-300 shadow-xl shadow-[#2D2926]/20">
+            {step === 'phone' ? 'Continue to Plana' : 'Verify & Enter'}
           </button>
+        </div>
 
-          {step === 'otp' && (
-            <button 
-              onClick={() => setStep('phone')}
-              className="w-full text-sm font-semibold text-gray-400 hover:text-indigo-600 transition-colors"
-            >
-              Back to phone number
-            </button>
-          )}
+        {/* Footer Link */}
+        <div className="mt-8 text-center">
+          <button 
+            onClick={() => setStep(step === 'phone' ? 'otp' : 'phone')}
+            className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2926] uppercase tracking-widest transition-colors"
+          >
+            {step === 'phone' ? 'Need help?' : 'Back to phone number'}
+          </button>
         </div>
       </div>
     </div>

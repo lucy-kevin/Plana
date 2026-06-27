@@ -56,15 +56,16 @@ Return a JSON array of plain strings only. No objects, no keys, no markdown. Exa
 
   try {
     const text = await generateWithRetry(prompt);
-    const clean = text.replace(/```json[\s\S]*?```|```[\s\S]*?```|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-    // Ensure we always return an array of strings
+    const stripped = text.replace(/```json[\s\S]*?```|```/g, '').trim();
+    const start = stripped.indexOf('[');
+    const end = stripped.lastIndexOf(']');
+    if (start === -1 || end === -1) throw new Error('No JSON array in response');
+    const parsed = JSON.parse(stripped.slice(start, end + 1));
     const questions: string[] = Array.isArray(parsed)
       ? parsed.map((q: unknown) => (typeof q === 'string' ? q : (q as { question?: string })?.question ?? String(q)))
       : getFallback(type);
     return NextResponse.json({ questions });
-  } catch (err) {
-    console.error('[ai-savings-questions] error:', err);
+  } catch {
     return NextResponse.json({ questions: getFallback(type) });
   }
 }

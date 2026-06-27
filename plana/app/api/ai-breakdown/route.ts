@@ -89,21 +89,23 @@ export async function POST(req: NextRequest) {
 
   console.log('[ai-breakdown] received:', { type, location, budget, currency, guestCount });
 
-  const prompt = `Budget planner. Event: "${type}" in ${location || 'Uganda'}. Budget: ${currency} ${budget}${guestCount ? `, ${guestCount} guests` : ''}.
+  const prompt = `You are a budget planner for Uganda events. Return ONLY a valid JSON array, no explanation, no markdown.
 
-Return a raw JSON array (5-8 items) of realistic spending categories for this specific event type. No markdown.
-[{"id":"cat-1","category":"string","percentage":number,"amount":number,"typicalMin":number,"typicalMax":number,"tip":"specific tip with real ${location || 'Uganda'} vendor or place names","source":"string"}]
+Event: ${type} in ${location || 'Uganda'}. Budget: ${budget} UGX.${guestCount ? ` Guests: ${guestCount}.` : ''}
 
-Rules: percentages total 100. amount=(percentage/100)*${budget}. typicalMin=amount*0.75. typicalMax=amount*1.3.`;
+Return 5 categories. Each item: {"id":"cat-1","category":"name","percentage":number,"amount":number,"typicalMin":number,"typicalMax":number,"tip":"one short tip","source":"local estimate"}
+Rules: percentages must total 100. amount=(percentage/100)*${budget}. typicalMin=amount*0.8. typicalMax=amount*1.25.
+Output the JSON array only. Start with [`;
 
   try {
     const text = await generateWithRetry(prompt);
-    console.log('[ai-breakdown] raw:', text.slice(0, 300));
-    const clean = text.replace(/```json[\s\S]*?```|```/g, '').trim();
-    const breakdown = JSON.parse(clean);
+    const stripped = text.replace(/```json[\s\S]*?```|```/g, '').trim();
+    const start = stripped.indexOf('[');
+    const end = stripped.lastIndexOf(']');
+    if (start === -1 || end === -1) throw new Error('No JSON array found');
+    const breakdown = JSON.parse(stripped.slice(start, end + 1));
     return NextResponse.json({ breakdown });
-  } catch (err) {
-    console.error('[ai-breakdown] error:', err);
+  } catch {
     return NextResponse.json({ breakdown: getFallback(type, budget) });
   }
 }

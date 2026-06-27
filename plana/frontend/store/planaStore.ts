@@ -33,7 +33,9 @@ interface PlanStore {
 
   // Active plan for breakdown page (Zustand in-memory)
   plan: Plan | null;
+  isCalculating: boolean;
   setPlan: (plan: Plan) => void;
+  setIsCalculating: (val: boolean) => void;
   updateItemAmount: (itemId: string, newAmount: number) => void;
   getTotalAllocated: () => number;
 
@@ -57,7 +59,9 @@ export const usePlanStore = create<PlanStore>()(
       setDraft: (fields) => set((s) => ({ draft: { ...s.draft, ...fields } })),
 
       plan: null,
+      isCalculating: false,
       setPlan: (plan) => set({ plan }),
+      setIsCalculating: (val) => set({ isCalculating: val }),
       updateItemAmount: (itemId, newAmount) => set((state) => {
         if (!state.plan) return state;
         return {

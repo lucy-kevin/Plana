@@ -14,6 +14,7 @@ export default function DynamicDetails() {
   const [guestCount, setGuestCount] = useState(draft.guestCount ? String(draft.guestCount) : '');
   const [eventDate, setEventDate] = useState(draft.eventDate ?? '');
   const [loading, setLoading] = useState(true);
+  // const [answers, setAnswers] = useState<Record<string, any>>({});
 
   useEffect(() => {
     fetch('/api/ai-savings-questions', {
@@ -47,6 +48,11 @@ export default function DynamicDetails() {
   }
 
   const canProceed = location.trim().length > 0;
+
+  // Helper to handle input changes
+  const handleAnswer = (id: string, value: string) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
+  };
 
   return (
     <main className="min-h-screen bg-[#FDFBF7] py-16 px-6 font-sans">

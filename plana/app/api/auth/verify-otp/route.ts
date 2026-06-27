@@ -39,22 +39,32 @@ export async function POST(req: NextRequest) {
   let user = existingUser;
 
   if (!user) {
-    // Create new user in Supabase Auth
+    // Try to create Supabase Auth user (may already exist if they used USSD)
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       phone,
       phone_confirm: true,
       user_metadata: { name: name ?? phone },
     });
 
+    let userId: string;
+
     if (authError) {
-      console.error('[verify-otp] auth error:', authError.message);
-      return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
+      // Auth user may already exist — try to find them by phone
+      const { data: { users: existingAuthUsers } } = await supabaseAdmin.auth.admin.listUsers();
+      const found = existingAuthUsers?.find(u => u.phone === phone);
+      if (!found) {
+        console.error('[verify-otp] auth error:', authError.message);
+        return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
+      }
+      userId = found.id;
+    } else {
+      userId = authData.user.id;
     }
 
-    // Save user profile
+    // Upsert user profile (handles the case where USSD created a phone-only record)
     const { data: newUser, error: profileError } = await supabaseAdmin
       .from('users')
-      .insert({ id: authData.user.id, phone, name: name ?? null })
+      .upsert({ id: userId, phone, name: name ?? null }, { onConflict: 'phone' })
       .select()
       .single();
 

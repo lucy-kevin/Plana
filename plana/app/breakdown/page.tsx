@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePlanStore } from '@/frontend/store/planaStore';
 
@@ -7,7 +7,7 @@ interface BreakdownItem { category: string; amount: number; percentage: number; 
 
 export default function AIPlanningBreakdown() {
   const router = useRouter();
-  const { draft, phone, setSavedPlanId } = usePlanStore();
+  const { draft, phone, setSavedPlanId, setDraft } = usePlanStore();
 
   const [items, setItems] = useState<BreakdownItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +15,7 @@ export default function AIPlanningBreakdown() {
   const [savingsAdvice, setSavingsAdvice] = useState('');
   const [weeklyTarget, setWeeklyTarget] = useState<number | null>(null);
   const [error, setError] = useState('');
+  const fetchedRef = useRef(false);
 
   const budget = draft.budget || 0;
   const totalAllocated = items.reduce((s, i) => s + i.amount, 0);
@@ -22,6 +23,8 @@ export default function AIPlanningBreakdown() {
 
   useEffect(() => {
     if (!budget) { router.push('/budget'); return; }
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
 
     // Fetch AI breakdown
     fetch('/api/ai-breakdown', {
@@ -80,6 +83,7 @@ export default function AIPlanningBreakdown() {
         currency: 'UGX',
         guestCount: draft.guestCount || undefined,
         eventDate: draft.eventDate || undefined,
+        breakdown: items.length > 0 ? items : undefined,
       }),
     });
 
@@ -87,6 +91,7 @@ export default function AIPlanningBreakdown() {
     if (!res.ok) { setError(data.error ?? 'Could not save plan.'); setSaving(false); return; }
 
     setSavedPlanId(data.plan.id);
+    setDraft({}); // clear the form for the next plan
     router.push('/dashboard');
   }
 

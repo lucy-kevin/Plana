@@ -39,7 +39,8 @@ export default function LoginPage() {
     const data = await res.json();
     if (!res.ok) { setError(data.error ?? 'Incorrect code.'); setLoading(false); return; }
     storePhone(phone);
-    router.push('/dashboard');
+    // New users go straight to creating their first plan
+    router.push(data.isNewUser ? '/setup' : '/dashboard');
   }
 
   return (
@@ -56,9 +57,9 @@ export default function LoginPage() {
             Your Personal Planning Assistant
           </div>
           <h1 className="text-5xl font-serif text-[#2D2926] tracking-tight">Plana</h1>
-          <p className="text-[#7D766D] mt-4 font-medium max-w-[240px] mx-auto leading-relaxed">
+          <p className="text-[#7D766D] mt-4 font-medium max-w-[260px] mx-auto leading-relaxed">
             {step === 'phone'
-              ? 'Enter your phone number to start your journey.'
+              ? 'New or returning — just enter your number. We will send you a code.'
               : 'Check your messages for the 6-digit code.'}
           </p>
         </div>

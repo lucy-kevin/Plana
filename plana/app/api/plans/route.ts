@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 // POST /api/plans — create a new plan
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { phone, type, location, budget, currency, guestCount, eventDate, startDate } = body;
+  const { phone, type, location, budget, currency, guestCount, eventDate, startDate, breakdown } = body;
 
   if (!phone || !type || !budget) {
     return NextResponse.json({ error: 'phone, type and budget are required' }, { status: 400 });
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       event_date: eventDate ?? null,
       start_date: startDate ?? new Date().toISOString().split('T')[0],
       total_saved: 0,
+      breakdown: breakdown ?? null,
     })
     .select()
     .single();

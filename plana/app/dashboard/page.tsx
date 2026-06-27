@@ -307,16 +307,22 @@ export default function UserDashboard() {
                         )}
                       </div>
 
-                      {isComplete && (
-                        <div className="mt-2 pt-3 border-t border-[#EBE7E0]">
+                      <div className="mt-3 pt-3 border-t border-[#EBE7E0] flex items-center justify-between">
+                        <Link
+                          href={`/plans/${plan.id}`}
+                          className="text-xs font-black text-[#4F46E5] uppercase tracking-widest hover:text-[#2D2926] transition-colors"
+                        >
+                          View &amp; share list →
+                        </Link>
+                        {isComplete && (
                           <Link
                             href="/breakdown/marketplace"
-                            className="text-xs font-black text-[#4F46E5] uppercase tracking-widest hover:text-[#2D2926] transition-colors"
+                            className="text-xs font-black text-[#A8A29E] uppercase tracking-widest hover:text-[#2D2926] transition-colors"
                           >
-                            Find service providers →
+                            Find providers →
                           </Link>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 );

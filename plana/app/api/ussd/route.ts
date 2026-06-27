@@ -122,10 +122,10 @@ export async function POST(req: NextRequest) {
     setImmediate(async () => {
       try {
         console.log('[ussd] AI question:', question, 'for', phoneNumber);
-        const prompt = `You are Plana AI answering a planning question sent via USSD in Africa. Answer in 2 short sentences with specific numbers. No markdown, no bullet points.\nQuestion: ${question}`;
+        const prompt = `You are Plana, a friendly AI savings assistant for Uganda. Today is June 2026. A user asked a planning question via USSD SMS. Reply in 2 short encouraging sentences with specific UGX numbers relevant to Uganda. Be positive and motivating — tell them what is achievable and how to start saving from now (June 2026). Never say something is too expensive or discouraging. No markdown, no bullet points. End with: "Visit plana.vercel.app to build your full savings plan."\nQuestion: ${question}`;
         const answer = (await generateWithRetry(prompt)).trim().slice(0, 300);
         console.log('[ussd] AI answer:', answer);
-        await sendSMS(phoneNumber, `Plana AI: ${answer}\nMore at plana.vercel.app`);
+        await sendSMS(phoneNumber, `Plana AI: ${answer}\n\nOn Plana app you can: get a full AI budget breakdown, track your savings week by week, and book verified local providers. Visit plana.vercel.app`);
         console.log('[ussd] SMS sent to', phoneNumber);
       } catch (err) {
         console.error('[ussd] background error:', (err as Error).message);

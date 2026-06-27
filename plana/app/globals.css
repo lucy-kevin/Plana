@@ -6,9 +6,9 @@
 
   /* Design tokens — single source of truth */
   --color-background: #FDFBF7;
-  --color-foreground: #2D2926;
+  --color-foreground: #7a3700;
   --color-surface: #FFFFFF;
-  --color-muted: #A8A29E;
+  --color-muted: #e06100;
   --color-body: #7D766D;
   --color-muted-lighter: #C4BAB0;
   --color-border: #EBE7E0;
@@ -16,7 +16,7 @@
   --color-input-bg: #F9F7F4;
   --color-primary: #4F46E5;
   --color-primary-subtle: #6366F1;
-  --color-button-bg: #2D2926;
+  --color-button-bg: #3d1b00;
   --color-button-hover: #1A1614;
   --color-button-text: #FDFBF7;
   --color-warning: #B45309;

@@ -35,31 +35,17 @@ export async function POST(req: NextRequest) {
       Object.entries(answers).map(([k, v]) => `- ${k}: ${v}`).join('\n')
     : '';
 
-  const prompt = `You are a warm, practical savings coach for Plana, a planning app used in Uganda.
-
-The user is saving for: ${type}${location ? ` in ${location}` : ''}.
-Goal: ${currency} ${budget.toLocaleString()}
-Saved so far: ${currency} ${totalSaved.toLocaleString()} (${percentSaved}% done)
-Still needed: ${currency} ${needed.toLocaleString()}
-Weeks left: ${weeksLeft}
-Must save per week: ${currency} ${perWeek.toLocaleString()}
-Must save per month: ${currency} ${perMonth.toLocaleString()}
-Event date: ${eventDate || 'not set'}
-${answersText}
-
-Write 3–4 sentences of warm, practical savings advice in plain English. No markdown, no bullet points.
-Tell them clearly how much to save per week, and recommend a specific savings method (M-PESA Goal, Sacco, bank standing order, or chama).`;
+  const prompt = `Savings coach for Uganda. Be brief and encouraging. No markdown.
+Plan: ${type}${location ? ` in ${location}` : ''}. Goal: ${currency} ${budget.toLocaleString()}. Weeks left: ${weeksLeft}. Save per week: ${currency} ${perWeek.toLocaleString()}.
+Write 2 short sentences: tell them the weekly amount to save and recommend one savings method (Sacco, M-PESA Goal, or bank standing order).`;
 
   try {
     const advice = await generateWithRetry(prompt);
     return NextResponse.json({ advice: advice.trim(), weeklyTarget: perWeek });
-  } catch (err) {
-    console.error('[ai-savings] error:', err);
-    return NextResponse.json({
-      weeklyTarget: perWeek,
-      advice: weeksLeft > 0
-        ? `To reach your ${currency} ${budget.toLocaleString()} goal, you need to save ${currency} ${perWeek.toLocaleString()} every week for the next ${weeksLeft} weeks. Consider locking your savings in an M-PESA Goal account or a Sacco so you are not tempted to spend early. Set up a standing order on your bank app to move money automatically on payday.`
-        : `Set a clear weekly savings target and lock your money in an M-PESA Goal account or Sacco so it stays untouched until your event. A standing order from your bank on payday is the easiest way to stay consistent.`,
-    });
+  } catch {
+    const advice = weeksLeft > 0
+      ? `Save ${currency} ${perWeek.toLocaleString()} every week for ${weeksLeft} weeks to reach your goal. Lock your savings in a Sacco or M-PESA Goal so you are not tempted to spend early.`
+      : `Lock your savings in a Sacco or M-PESA Goal account so they stay untouched until your event.`;
+    return NextResponse.json({ advice, weeklyTarget: perWeek });
   }
 }

@@ -116,6 +116,11 @@ export default function DynamicDetails() {
 
   const canProceed = location.trim().length > 0;
 
+  // Helper to handle input changes
+  const handleAnswer = (id: string, value: string) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
+  };
+
   return (
     <main className="min-h-screen bg-[#FDFBF7] py-16 px-6 font-sans">
       <div className="max-w-md mx-auto">

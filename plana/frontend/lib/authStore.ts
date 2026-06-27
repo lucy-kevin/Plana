@@ -1,14 +1,27 @@
-// store/authStore.ts
+// lib/authStore.ts
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface AuthState {
+interface AuthStore {
   token: string | null;
-  setToken: (token: string) => void;
+  phone: string | null;
+  setAuth: (token: string, phone: string) => void;
   logout: () => void;
+  setToken: (token: string) => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: null,
-  setToken: (token) => set({ token }),
-  logout: () => set({ token: null }),
-}));
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      token: null,
+      phone: null,
+      setToken: (token) => set({ token }),
+      setAuth: (token, phone) => set({ token, phone }),
+      logout: () => set({ token: null, phone: null }),
+    }),
+    {
+      name: 'plana-auth',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

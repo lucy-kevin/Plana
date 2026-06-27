@@ -3,12 +3,31 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePlanStore } from '@/frontend/store/planaStore';
 import { PLAN_TYPES } from '@/frontend/types/planTypes';
+import type { PlanType } from '@/frontend/types/types';
 
 export default function PlanSetup() {
   const [selected, setSelected] = useState<string | null>(null);
   const [customType, setCustomType] = useState('');
   const { setDraft } = usePlanStore();
   const router = useRouter();
+  const setPlan = usePlanStore((state) => state.setPlan); // Access the store
+
+  const handleNext = () => {
+    if (selected) {
+      const planType = PLAN_TYPES.find(p => p.id === selected);
+      if (planType) {
+        setPlan({ 
+          id: Math.random().toString(),
+          type: planType as unknown as PlanType, 
+          items: [],
+          totalBudget: 0,
+          destination: '', // Required by Plan interface
+          createdAt: new Date()
+        });
+      }
+      router.push('/budget');
+    }
+  };
 
   const labels: Record<string, string> = {
     wedding: 'Wedding', trip: 'Trip', corporate: 'Corporate Event',

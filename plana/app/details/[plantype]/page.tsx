@@ -1,19 +1,26 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import QuestionCard from '@/frontend/components/ui/QuestionCard';
 
 export default function DynamicDetails() {
   const { planType } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [answers, setAnswers] = useState<Record<string, any>>({});
 
-  // Mocking the backend fetch
+  // Simulate API fetch for questions
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
   const typeKey = Array.isArray(planType) ? planType[0] : (planType || 'custom');
+
+  // Helper to handle input changes
+  const handleAnswer = (id: string, value: any) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
+  };
 
   return (
     <main className="min-h-screen bg-[#FDFBF7] py-16 px-6">
@@ -30,30 +37,43 @@ export default function DynamicDetails() {
           </p>
         </div>
 
-        {/* Homey Input Card */}
-        <div className="bg-white p-8 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-[#EBE7E0]">
-          <div className="space-y-8">
-            {/* These inputs would be mapped from your API response */}
+        {/* Input Section */}
+        {loading ? (
+          <div className="space-y-6 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i}>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#A8A29E] mb-3 ml-1">
-                  Question {i}
-                </label>
-                <input 
-                  className="w-full p-4 bg-[#F9F7F4] rounded-2xl font-medium text-[#2D2926] border border-[#EBE7E0] focus:border-indigo-300 focus:ring-4 focus:ring-indigo-50/50 outline-none transition-all placeholder:text-[#D1CBC5]" 
-                  placeholder="Type your answer here..."
-                />
-              </div>
+              <div key={i} className="h-24 bg-white rounded-[2rem] border border-[#EBE7E0]" />
             ))}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <QuestionCard 
+              label="What is your estimated guest count?"
+              placeholder="e.g. 150"
+              type="number"
+              value={answers.guests || ''}
+              onChange={(val) => handleAnswer('guests', val)}
+            />
+            <QuestionCard 
+              label="Where is the event located?"
+              placeholder="e.g. Kampala, Uganda"
+              value={answers.location || ''}
+              onChange={(val) => handleAnswer('location', val)}
+            />
+            <QuestionCard 
+              label="Any special preferences?"
+              placeholder="e.g. Outdoor garden setting"
+              value={answers.notes || ''}
+              onChange={(val) => handleAnswer('notes', val)}
+            />
             
             <button 
-              onClick={() => router.push('/breakdown')}
-              className="w-full bg-[#2D2926] text-white py-5 rounded-2xl font-bold text-lg hover:bg-black transition-all active:scale-[0.98] shadow-lg"
+              onClick={() => router.push('/budget')}
+              className="w-full bg-[#2D2926] text-white py-6 rounded-2xl font-bold text-lg hover:bg-black transition-all active:scale-[0.98] shadow-lg mt-4"
             >
-              Generate My Plan
+              Continue to Budget
             </button>
           </div>
-        </div>
+        )}
 
         <p className="text-center text-[#B5AEA7] text-sm mt-10 font-medium">
           Powered by Plana AI

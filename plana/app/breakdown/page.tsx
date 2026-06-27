@@ -148,7 +148,7 @@ export default function AIPlanningBreakdown() {
         )}
 
         {/* Category list */}
-        <div className="space-y-3 mb-8">
+        <div className="space-y-3 mb-4">
           {items.map((item, idx) => (
             <div key={idx} className="flex items-center justify-between p-6 bg-surface rounded-3xl border border-border hover:border-foreground/20 transition-all">
               <div>
@@ -167,10 +167,23 @@ export default function AIPlanningBreakdown() {
                     setItems(updated);
                   }}
                 />
+                <button
+                  onClick={() => setItems(items.filter((_, i) => i !== idx))}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity text-[#A8A29E] hover:text-red-500 font-bold text-lg leading-none ml-1"
+                  title="Remove"
+                >×</button>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Add a custom line item */}
+        <button
+          onClick={() => setItems([...items, { category: 'New item', amount: 0, percentage: 0 }])}
+          className="w-full mb-8 py-4 rounded-3xl border-2 border-dashed border-[#EBE7E0] text-[#A8A29E] hover:border-[#2D2926] hover:text-[#2D2926] font-bold text-sm transition-all"
+        >
+          + Add item
+        </button>
 
         {error && (
           <p className="error-banner mb-6">{error}</p>

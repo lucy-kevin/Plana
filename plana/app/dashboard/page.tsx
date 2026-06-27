@@ -1,50 +1,44 @@
-// app/dashboard/page.tsx
 export default function UserDashboard() {
   return (
-    <div className="min-h-screen bg-[#FAF9F6] p-6 md:p-10">
-      <header className="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+    <div className="min-h-screen bg-[#FDFBF7] p-6 md:p-12">
+      <header className="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
         <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">Your Plans</h1>
-          <p className="text-gray-500 mt-2">Manage your events and track your budget progress.</p>
+          <h1 className="text-5xl font-serif text-[#2D2926] tracking-tight">My Plans</h1>
+          <p className="text-[#7D766D] mt-3 text-lg">Curated events for your life goals.</p>
         </div>
-        <button className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-semibold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98]">
+        <button className="bg-[#2D2926] text-white px-8 py-4 rounded-2xl font-bold hover:bg-black transition-all shadow-xl shadow-gray-200 active:scale-[0.98]">
           + New Plan
         </button>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <section className="md:col-span-8 space-y-4">
-          <div className="bg-white/60 backdrop-blur-xl p-6 rounded-[2rem] border border-white/50 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Active Events</h2>
-            {/* Example of "At Risk" state for variety */}
-            <div className="group bg-white p-6 rounded-2xl border border-gray-100 hover:border-indigo-100 transition-all cursor-pointer shadow-sm">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">Wedding in Nairobi</h3>
-                  <p className="text-sm text-gray-500">KES 350,000 / 500,000 spent</p>
-                </div>
-                <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Warning</span>
+      <section className="grid md:grid-cols-12 gap-8">
+        <div className="md:col-span-8 space-y-6">
+          <h2 className="text-sm font-black text-[#A8A29E] uppercase tracking-widest pl-1">Active Now</h2>
+          <div className="bg-white p-8 rounded-[2rem] border border-[#EBE7E0] shadow-sm hover:shadow-md transition-all cursor-pointer">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-2xl font-serif text-[#2D2926]">Wedding in Nairobi</h3>
+                <p className="text-[#7D766D] mt-1 font-medium">350,000 / 500,000 Spent</p>
               </div>
-              <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-3 bg-amber-500 rounded-full w-[70%]"></div>
-              </div>
+              <span className="bg-[#FFF8F0] text-[#B45309] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-[#FDE68A]">Warning</span>
+            </div>
+            <div className="w-full h-3 bg-[#F9F7F4] rounded-full overflow-hidden">
+              <div className="h-full bg-[#B45309] w-[70%] rounded-full transition-all duration-1000"></div>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section className="md:col-span-4">
-          <div className="bg-white/60 backdrop-blur-xl p-6 rounded-[2rem] border border-white/50 h-full">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Notifications</h2>
-            <div className="bg-amber-50/80 p-5 rounded-2xl border border-amber-100">
-              <p className="text-sm text-amber-900">
-                <span className="font-bold block mb-1">New Quote Received</span>
-                "Elegant Decor" has sent a quote for your Wedding plan.
-              </p>
-              <button className="mt-3 text-xs font-bold text-indigo-600 hover:underline">View Quote →</button>
-            </div>
+        <aside className="md:col-span-4">
+          <h2 className="text-sm font-black text-[#A8A29E] uppercase tracking-widest pl-1 mb-6">Updates</h2>
+          <div className="bg-white p-6 rounded-[2rem] border border-[#EBE7E0]">
+            <p className="text-[#2D2926] text-sm leading-relaxed mb-4">
+              <span className="font-black block mb-1">New Quote: Elegant Decor</span>
+              A quote for your Wedding plan has been received.
+            </p>
+            <button className="text-sm font-bold text-[#4F46E5] hover:underline underline-offset-4">View Quote →</button>
           </div>
-        </section>
-      </div>
+        </aside>
+      </section>
     </div>
   );
 }

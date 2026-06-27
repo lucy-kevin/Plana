@@ -1,0 +1,7 @@
+.gitignore
+file_list.txt
+node_modules
+package-lock.json
+package.json
+plana
+README.md

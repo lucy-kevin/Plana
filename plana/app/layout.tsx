@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="bg-[#FDFBF7] font-sans antialiased text-[#2D2926]">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="pt-24">{children}</main>
       </body>
     </html>

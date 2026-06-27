@@ -77,22 +77,20 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2D2926] font-sans">
+    <div className="min-h-screen bg-background text-foreground">
 
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#2D2926] text-[#FDFBF7] px-6 py-3 rounded-2xl text-sm font-semibold shadow-xl">
-          {toast}
-        </div>
+        <div className="toast">{toast}</div>
       )}
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-16 py-5 border-b border-[#EBE7E0] bg-[#FDFBF7]/90 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="nav-bar">
         <div className="flex items-center gap-4">
           <Link href="/" className="text-2xl font-serif tracking-tight">Plana</Link>
-          <span className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] border border-[#EBE7E0] px-3 py-1 rounded-full">Admin</span>
+          <span className="badge-micropill border border-border px-3 py-1 rounded-full">Admin</span>
         </div>
         {(stats?.pending ?? 0) > 0 && (
-          <button onClick={() => setTab('providers')} className="text-xs font-bold bg-[#2D2926] text-[#FDFBF7] px-4 py-2 rounded-full">
+          <button onClick={() => setTab('providers')} className="text-xs font-bold bg-button-bg text-button-text px-4 py-2 rounded-full">
             {stats!.pending} pending approval
           </button>
         )}
@@ -102,7 +100,7 @@ export default function AdminDashboard() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-2">Plana admin</p>
+          <p className="badge-micropill mb-2">Plana admin</p>
           <h1 className="text-4xl font-serif">Dashboard</h1>
         </div>
 
@@ -112,15 +110,11 @@ export default function AdminDashboard() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold border-2 transition-all ${
-                tab === t.key
-                  ? 'bg-[#2D2926] text-[#FDFBF7] border-[#2D2926]'
-                  : 'bg-white text-[#7D766D] border-[#EBE7E0] hover:border-[#2D2926] hover:text-[#2D2926]'
-              }`}
+              className={`btn-filter ${tab === t.key ? 'btn-filter-active' : ''}`}
             >
               {t.label}
               {t.badge !== undefined && t.badge > 0 && (
-                <span className={`px-1.5 rounded-full text-[10px] font-black ${tab === t.key ? 'bg-white/20' : 'bg-[#EBE7E0]'}`}>
+                <span className={`ml-2 px-1.5 rounded-full text-[10px] font-black ${tab === t.key ? 'bg-white/20' : 'bg-accent-bg'}`}>
                   {t.badge}
                 </span>
               )}
@@ -138,9 +132,9 @@ export default function AdminDashboard() {
                 { label: 'Live providers', value: stats?.providers },
                 { label: 'Pending approval', value: stats?.pending, alert: (stats?.pending ?? 0) > 0 },
               ].map(s => (
-                <div key={s.label} className={`rounded-[1.5rem] border-2 p-6 ${s.alert ? 'border-amber-200 bg-amber-50' : 'border-[#EBE7E0] bg-white'}`}>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-3">{s.label}</p>
-                  <p className="text-4xl font-serif text-[#2D2926]">{s.value ?? '—'}</p>
+                <div key={s.label} className={`rounded-[1.5rem] border-2 p-6 ${s.alert ? 'border-amber-200 bg-amber-50' : 'border-border bg-surface'}`}>
+                  <p className="badge-micropill mb-3">{s.label}</p>
+                  <p className="text-4xl font-serif text-foreground">{s.value ?? '—'}</p>
                 </div>
               ))}
             </div>
@@ -154,10 +148,10 @@ export default function AdminDashboard() {
                 <button
                   key={card.label}
                   onClick={() => setTab(card.tab)}
-                  className="text-left bg-white rounded-[1.5rem] border border-[#EBE7E0] p-6 hover:border-[#2D2926] transition-all group"
+                  className="text-left bg-surface rounded-[1.5rem] border border-border p-6 hover:border-foreground transition-all group"
                 >
-                  <p className="font-bold text-[#2D2926] mb-1 group-hover:underline underline-offset-4">{card.label}</p>
-                  <p className="text-xs text-[#7D766D] leading-relaxed">{card.desc}</p>
+                  <p className="font-bold text-foreground mb-1 group-hover:underline underline-offset-4">{card.label}</p>
+                  <p className="text-xs text-body leading-relaxed">{card.desc}</p>
                 </button>
               ))}
             </div>
@@ -168,21 +162,21 @@ export default function AdminDashboard() {
         {tab === 'users' && (
           <div>
             {loading ? (
-              <p className="text-sm text-[#A8A29E] font-medium">Loading...</p>
+              <p className="text-sm text-muted font-medium">Loading...</p>
             ) : users.length === 0 ? (
-              <p className="text-sm text-[#A8A29E] font-medium">No users yet.</p>
+              <p className="text-sm text-muted font-medium">No users yet.</p>
             ) : (
               <>
-                <p className="text-xs text-[#A8A29E] font-semibold mb-6">{users.length} registered</p>
-                <div className="divide-y divide-[#EBE7E0]">
+                <p className="text-xs text-muted font-semibold mb-6">{users.length} registered</p>
+                <div className="divide-y divide-border">
                   {users.map(u => (
                     <div key={u.id} className="py-5 grid grid-cols-3 gap-4 items-center">
                       <div>
-                        <p className="font-semibold text-sm text-[#2D2926]">{u.name ?? 'No name'}</p>
-                        <p className="text-xs text-[#7D766D] mt-0.5">{u.phone}</p>
+                        <p className="font-semibold text-sm text-foreground">{u.name ?? 'No name'}</p>
+                        <p className="text-xs text-body mt-0.5">{u.phone}</p>
                       </div>
-                      <p className="text-xs text-[#A8A29E]">{date(u.created_at)}</p>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-[#C4BAB0] text-right">{u.id.slice(0, 8)}</p>
+                      <p className="text-xs text-muted">{date(u.created_at)}</p>
+                      <p className="badge-micropill text-muted-lighter text-right">{u.id.slice(0, 8)}</p>
                     </div>
                   ))}
                 </div>
@@ -195,33 +189,33 @@ export default function AdminDashboard() {
         {tab === 'plans' && (
           <div>
             {loading ? (
-              <p className="text-sm text-[#A8A29E] font-medium">Loading...</p>
+              <p className="text-sm text-muted font-medium">Loading...</p>
             ) : plans.length === 0 ? (
-              <p className="text-sm text-[#A8A29E] font-medium">No plans yet.</p>
+              <p className="text-sm text-muted font-medium">No plans yet.</p>
             ) : (
               <>
-                <p className="text-xs text-[#A8A29E] font-semibold mb-6">{plans.length} plans created</p>
-                <div className="divide-y divide-[#EBE7E0]">
+                <p className="text-xs text-muted font-semibold mb-6">{plans.length} plans created</p>
+                <div className="divide-y divide-border">
                   {plans.map(p => (
                     <div key={p.id} className="py-5 grid md:grid-cols-4 gap-4 items-start">
                       <div>
-                        <p className="font-semibold text-sm text-[#2D2926] capitalize">{p.type ?? 'Custom'}</p>
-                        <p className="text-xs text-[#7D766D] mt-0.5">{p.phone}</p>
+                        <p className="font-semibold text-sm text-foreground capitalize">{p.type ?? 'Custom'}</p>
+                        <p className="text-xs text-body mt-0.5">{p.phone}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-[#A8A29E] font-medium mb-0.5">Budget</p>
-                        <p className="text-sm font-bold text-[#2D2926]">
+                        <p className="text-xs text-muted font-medium mb-0.5">Budget</p>
+                        <p className="text-sm font-bold text-foreground">
                           {p.budget ? `${p.currency} ${fmt(p.budget)}` : '—'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-[#A8A29E] font-medium mb-0.5">{p.location ?? '—'}</p>
-                        <p className="text-xs text-[#7D766D]">{p.guest_count ? `${p.guest_count} guests` : ''}</p>
+                        <p className="text-xs text-muted font-medium mb-0.5">{p.location ?? '—'}</p>
+                        <p className="text-xs text-body">{p.guest_count ? `${p.guest_count} guests` : ''}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs text-[#A8A29E]">{date(p.created_at)}</p>
+                        <p className="text-xs text-muted">{date(p.created_at)}</p>
                         {p.event_date && (
-                          <p className="text-xs text-[#7D766D] mt-0.5">Event: {date(p.event_date)}</p>
+                          <p className="text-xs text-body mt-0.5">Event: {date(p.event_date)}</p>
                         )}
                       </div>
                     </div>
@@ -236,23 +230,23 @@ export default function AdminDashboard() {
         {tab === 'providers' && (
           <div>
             {loading ? (
-              <p className="text-sm text-[#A8A29E] font-medium">Loading...</p>
+              <p className="text-sm text-muted font-medium">Loading...</p>
             ) : providers.length === 0 ? (
-              <p className="text-sm text-[#A8A29E] font-medium">No providers yet.</p>
+              <p className="text-sm text-muted font-medium">No providers yet.</p>
             ) : (
               <>
-                <div className="flex gap-4 mb-6 text-xs font-semibold text-[#A8A29E]">
+                <div className="flex gap-4 mb-6 text-xs font-semibold text-muted">
                   <span>{providers.filter(p => !p.verified).length} pending</span>
                   <span>·</span>
                   <span>{providers.filter(p => p.verified).length} live</span>
                 </div>
-                <div className="divide-y divide-[#EBE7E0]">
+                <div className="divide-y divide-border">
                   {providers.map(p => (
                     <div key={p.id} className="py-6 grid md:grid-cols-4 gap-4 items-center">
                       <div className="md:col-span-2">
                         <div className="flex items-center gap-3 mb-1">
-                          <p className="font-bold text-sm text-[#2D2926]">{p.name}</p>
-                          <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${
+                          <p className="font-bold text-sm text-foreground">{p.name}</p>
+                          <span className={`badge-status ${
                             p.verified
                               ? 'text-green-700 bg-green-50 border-green-200'
                               : 'text-amber-700 bg-amber-50 border-amber-200'
@@ -260,30 +254,30 @@ export default function AdminDashboard() {
                             {p.verified ? 'Live' : 'Pending'}
                           </span>
                         </div>
-                        <p className="text-xs text-[#7D766D]">{p.phone}</p>
-                        <p className="text-xs text-[#A8A29E] mt-0.5">{p.category} · {p.location}</p>
+                        <p className="text-xs text-body">{p.phone}</p>
+                        <p className="text-xs text-muted mt-0.5">{p.category} · {p.location}</p>
                       </div>
                       <div>
                         {(p.price_min || p.price_max) ? (
-                          <p className="text-xs text-[#7D766D]">
+                          <p className="text-xs text-body">
                             UGX {p.price_min ? fmt(p.price_min) : '—'} – {p.price_max ? fmt(p.price_max) : '—'}
                           </p>
                         ) : (
-                          <p className="text-xs text-[#C4BAB0]">No price</p>
+                          <p className="text-xs text-muted-lighter">No price</p>
                         )}
-                        <p className="text-[10px] text-[#C4BAB0] mt-1">{date(p.created_at)}</p>
+                        <p className="text-[10px] text-muted-lighter mt-1">{date(p.created_at)}</p>
                       </div>
                       <div className="flex justify-end">
                         {!p.verified ? (
                           <button
                             onClick={() => approve(p)}
                             disabled={approving === p.id}
-                            className="bg-[#2D2926] text-[#FDFBF7] px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-[#1A1614] transition-colors disabled:opacity-50"
+                            className="bg-button-bg text-button-text px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-button-hover transition-colors disabled:opacity-50"
                           >
                             {approving === p.id ? 'Approving...' : 'Approve & notify'}
                           </button>
                         ) : (
-                          <span className="text-xs text-[#A8A29E] font-medium">Approved</span>
+                          <span className="text-xs text-muted font-medium">Approved</span>
                         )}
                       </div>
                     </div>

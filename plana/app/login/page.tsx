@@ -43,20 +43,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#FDFBF7] relative overflow-hidden font-sans">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="absolute -top-[20%] -left-[10%] w-[700px] h-[700px] bg-indigo-100/40 rounded-full blur-[140px] animate-pulse" />
         <div className="absolute bottom-[0%] -right-[10%] w-[600px] h-[600px] bg-amber-100/50 rounded-full blur-[140px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-md bg-white/80 backdrop-blur-2xl p-10 rounded-[3rem] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.1)] border border-white/50">
+      <div className="relative z-10 w-full max-w-md bg-surface/80 backdrop-blur-2xl p-10 rounded-[3rem] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.1)] border border-white/50">
 
         <div className="text-center mb-10">
-          <div className="inline-block px-4 py-1 mb-4 rounded-full bg-[#2D2926]/5 text-[#2D2926] text-[10px] font-black uppercase tracking-[0.2em]">
+          <div className="inline-block px-4 py-1 mb-4 rounded-full bg-foreground/5 text-foreground badge-micropill tracking-[0.2em] uppercase">
             Your Personal Planning Assistant
           </div>
-          <h1 className="text-5xl font-serif text-[#2D2926] tracking-tight">Plana</h1>
-          <p className="text-[#7D766D] mt-4 font-medium max-w-[240px] mx-auto leading-relaxed">
+          <h1 className="text-5xl font-serif text-foreground tracking-tight">Plana</h1>
+          <p className="text-body mt-4 font-medium max-w-[240px] mx-auto leading-relaxed">
             {step === 'phone'
               ? 'Enter your phone number to start your journey.'
               : 'Check your messages for the 6-digit code.'}
@@ -69,7 +69,7 @@ export default function LoginPage() {
               value={phone}
               onChange={e => setPhone(e.target.value)}
               placeholder="+256 700 000 000"
-              className="w-full p-6 text-center text-2xl font-bold bg-white rounded-3xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] focus:ring-4 focus:ring-[#2D2926]/5 transition-all shadow-inner"
+              className="w-full p-6 text-center text-2xl font-bold bg-surface rounded-3xl border-2 border-border outline-none focus:border-foreground focus:ring-4 focus:ring-foreground/5 transition-all shadow-inner"
             />
           ) : (
             <input
@@ -77,12 +77,12 @@ export default function LoginPage() {
               onChange={e => setOtp(e.target.value)}
               placeholder="000 000"
               maxLength={6}
-              className="w-full p-6 text-center text-2xl font-bold bg-white rounded-3xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] focus:ring-4 focus:ring-[#2D2926]/5 transition-all shadow-inner tracking-[0.3em]"
+              className="w-full p-6 text-center text-2xl font-bold bg-surface rounded-3xl border-2 border-border outline-none focus:border-foreground focus:ring-4 focus:ring-foreground/5 transition-all shadow-inner tracking-[0.3em]"
             />
           )}
 
           {error && (
-            <p className="text-sm font-semibold text-red-700 bg-red-50 border border-red-100 p-4 rounded-2xl text-center">
+            <p className="error-banner text-center">
               {error}
             </p>
           )}
@@ -90,7 +90,7 @@ export default function LoginPage() {
           <button
             onClick={step === 'phone' ? sendOtp : verifyOtp}
             disabled={loading}
-            className="w-full bg-[#2D2926] text-white py-6 rounded-3xl font-bold text-lg hover:scale-[1.01] transition-all duration-300 shadow-xl shadow-[#2D2926]/20 disabled:opacity-50"
+            className="w-full bg-button-bg text-white py-6 rounded-3xl font-bold text-lg hover:scale-[1.01] transition-all duration-300 shadow-xl shadow-button-bg/20 disabled:opacity-50"
           >
             {loading
               ? (step === 'phone' ? 'Sending code...' : 'Verifying...')
@@ -101,7 +101,7 @@ export default function LoginPage() {
         <div className="mt-8 text-center">
           <button
             onClick={() => { setStep(step === 'phone' ? 'otp' : 'phone'); setError(''); }}
-            className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2926] uppercase tracking-widest transition-colors"
+            className="text-xs font-bold text-muted hover:text-foreground uppercase tracking-widest transition-colors"
           >
             {step === 'phone' ? 'Need help?' : 'Back to phone number'}
           </button>

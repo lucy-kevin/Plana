@@ -30,23 +30,20 @@ function date(s: string) {
 const statusStyles: Record<string, string> = {
   pending: 'text-amber-700 bg-amber-50 border-amber-200',
   responded: 'text-blue-700 bg-blue-50 border-blue-200',
-  closed: 'text-[#A8A29E] bg-[#F4F0E8] border-[#EBE7E0]',
+  closed: 'text-muted bg-accent-bg border-border',
 };
 
 export default function ProviderDashboardPage() {
-  // Auth state
   const [authStep, setAuthStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
 
-  // Session state
   const [provider, setProvider] = useState<Provider | null>(null);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [quotesLoaded, setQuotesLoaded] = useState(false);
 
-  // UI state
   const [tab, setTab] = useState<DashTab>('quotes');
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState<Partial<Provider>>({});
@@ -55,7 +52,6 @@ export default function ProviderDashboardPage() {
   const [saveError, setSaveError] = useState('');
   const [updatingQuote, setUpdatingQuote] = useState<string | null>(null);
 
-  // Step 1 — send OTP
   async function sendOtp(e: React.FormEvent) {
     e.preventDefault();
     setAuthLoading(true);
@@ -77,7 +73,6 @@ export default function ProviderDashboardPage() {
     setAuthLoading(false);
   }
 
-  // Step 2 — verify OTP then look up provider profile
   async function verifyOtp(e: React.FormEvent) {
     e.preventDefault();
     setAuthLoading(true);
@@ -96,7 +91,6 @@ export default function ProviderDashboardPage() {
       return;
     }
 
-    // Check if this phone is a registered provider
     const providerRes = await fetch(`/api/providers/me?phone=${encodeURIComponent(phone)}`);
     const providerData = await providerRes.json();
 
@@ -111,7 +105,6 @@ export default function ProviderDashboardPage() {
     setForm(p);
     setSelectedCategories(p.category ? p.category.split(',').map((c: string) => c.trim()) : []);
 
-    // Load quotes
     const quotesRes = await fetch(`/api/providers/${p.id}/quotes`);
     const quotesData = await quotesRes.json();
     setQuotes(quotesData.quotes ?? []);
@@ -167,19 +160,17 @@ export default function ProviderDashboardPage() {
     setUpdatingQuote(null);
   }
 
-  // ── Auth screens ──────────────────────────────────────────────────
-
   if (!provider) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="max-w-md w-full">
-          <Link href="/" className="text-2xl font-serif tracking-tight text-[#2D2926] block mb-16">Plana</Link>
+          <Link href="/" className="text-2xl font-serif tracking-tight text-foreground block mb-16">Plana</Link>
 
           {authStep === 'phone' ? (
             <>
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-4">Provider login</p>
-              <h1 className="text-4xl font-serif text-[#2D2926] mb-3">Access your dashboard.</h1>
-              <p className="text-[#7D766D] mb-10 text-sm leading-relaxed">
+              <p className="badge-micropill mb-4">Provider login</p>
+              <h1 className="text-4xl font-serif text-foreground mb-3">Access your dashboard.</h1>
+              <p className="text-body mb-10 text-sm leading-relaxed">
                 Enter the phone number you registered with. We will send a one-time code to verify it is you.
               </p>
               <form onSubmit={sendOtp} className="space-y-4">
@@ -188,31 +179,31 @@ export default function ProviderDashboardPage() {
                   onChange={e => setPhone(e.target.value)}
                   required
                   placeholder="+256 700 000 000"
-                  className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] focus:ring-4 focus:ring-[#2D2926]/5 transition-all text-[#2D2926] font-medium text-sm"
+                  className="input-base"
                 />
                 {authError && (
-                  <p className="text-sm font-semibold text-red-700 bg-red-50 border border-red-100 p-4 rounded-2xl">{authError}</p>
+                  <p className="error-banner">{authError}</p>
                 )}
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full bg-[#2D2926] text-[#FDFBF7] py-4 rounded-2xl font-bold text-sm hover:bg-[#1A1614] transition-colors disabled:opacity-50"
+                  className="w-full bg-button-bg text-button-text py-4 rounded-2xl font-bold text-sm hover:bg-button-hover transition-colors disabled:opacity-50"
                 >
                   {authLoading ? 'Sending code...' : 'Send verification code'}
                 </button>
               </form>
-              <p className="mt-6 text-xs text-center text-[#A8A29E]">
+              <p className="mt-6 text-xs text-center text-muted">
                 Not registered?{' '}
-                <Link href="/providers/join" className="font-bold text-[#7D766D] hover:text-[#2D2926] transition-colors">
+                <Link href="/providers/join" className="font-bold text-body hover:text-foreground transition-colors">
                   Join as a provider
                 </Link>
               </p>
             </>
           ) : (
             <>
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#A8A29E] mb-4">Verify your number</p>
-              <h1 className="text-4xl font-serif text-[#2D2926] mb-3">Check your messages.</h1>
-              <p className="text-[#7D766D] mb-10 text-sm leading-relaxed">
+              <p className="badge-micropill mb-4">Verify your number</p>
+              <h1 className="text-4xl font-serif text-foreground mb-3">Check your messages.</h1>
+              <p className="text-body mb-10 text-sm leading-relaxed">
                 We sent a 6-digit code to {phone}.
               </p>
               <form onSubmit={verifyOtp} className="space-y-4">
@@ -222,22 +213,22 @@ export default function ProviderDashboardPage() {
                   required
                   placeholder="000000"
                   maxLength={6}
-                  className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] focus:ring-4 focus:ring-[#2D2926]/5 transition-all text-[#2D2926] font-bold text-center text-2xl tracking-[0.3em]"
+                  className="w-full p-4 bg-surface rounded-2xl border-2 border-border outline-none focus:border-foreground focus:ring-4 focus:ring-foreground/5 transition-all text-foreground font-bold text-center text-2xl tracking-[0.3em]"
                 />
                 {authError && (
-                  <p className="text-sm font-semibold text-red-700 bg-red-50 border border-red-100 p-4 rounded-2xl">{authError}</p>
+                  <p className="error-banner">{authError}</p>
                 )}
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full bg-[#2D2926] text-[#FDFBF7] py-4 rounded-2xl font-bold text-sm hover:bg-[#1A1614] transition-colors disabled:opacity-50"
+                  className="w-full bg-button-bg text-button-text py-4 rounded-2xl font-bold text-sm hover:bg-button-hover transition-colors disabled:opacity-50"
                 >
                   {authLoading ? 'Verifying...' : 'Verify and open dashboard'}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setAuthStep('phone'); setAuthError(''); setOtp(''); }}
-                  className="w-full text-xs font-bold text-[#A8A29E] hover:text-[#2D2926] transition-colors py-2"
+                  className="w-full text-xs font-bold text-muted hover:text-foreground transition-colors py-2"
                 >
                   Back to phone number
                 </button>
@@ -249,27 +240,23 @@ export default function ProviderDashboardPage() {
     );
   }
 
-  // ── Dashboard ─────────────────────────────────────────────────────
-
   const pendingQuotes = quotes.filter(q => q.status === 'pending');
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2D2926] font-sans">
+    <div className="min-h-screen bg-background text-foreground">
 
       {saveStatus === 'saved' && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#2D2926] text-[#FDFBF7] px-6 py-3 rounded-2xl text-sm font-semibold shadow-xl">
-          Profile updated.
-        </div>
+        <div className="toast">Profile updated.</div>
       )}
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-16 py-5 border-b border-[#EBE7E0] bg-[#FDFBF7]/90 backdrop-blur-sm sticky top-0 z-40">
+      <nav className="nav-bar">
         <Link href="/" className="text-2xl font-serif tracking-tight">Plana</Link>
         <div className="flex items-center gap-6">
-          <span className="text-sm font-semibold text-[#7D766D]">{provider.name}</span>
+          <span className="text-sm font-semibold text-body">{provider.name}</span>
           <button
             onClick={() => { setProvider(null); setPhone(''); setOtp(''); setAuthStep('phone'); setQuotes([]); setQuotesLoaded(false); }}
-            className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2926] transition-colors"
+            className="text-xs font-bold text-muted hover:text-foreground transition-colors"
           >
             Sign out
           </button>
@@ -293,48 +280,44 @@ export default function ProviderDashboardPage() {
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-5xl font-serif tracking-tight">{provider.name}</h1>
             {provider.verified && (
-              <span className="text-[10px] font-black uppercase tracking-widest text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-full">
+              <span className="badge-status text-green-700 bg-green-50 border-green-200">
                 Live
               </span>
             )}
           </div>
-          <p className="text-[#7D766D] mt-2 text-lg">Manage your engagements and profile.</p>
+          <p className="text-body mt-2 text-lg">Manage your engagements and profile.</p>
         </div>
 
         {/* Stat cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white p-8 rounded-[2rem] border border-[#EBE7E0] shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-2">Pending requests</p>
-            <p className="text-4xl font-bold text-[#2D2926]">{String(pendingQuotes.length).padStart(2, '0')}</p>
+          <div className="stat-card">
+            <p className="badge-micropill mb-2">Pending requests</p>
+            <p className="text-4xl font-bold text-foreground">{String(pendingQuotes.length).padStart(2, '0')}</p>
           </div>
-          <div className="bg-white p-8 rounded-[2rem] border border-[#EBE7E0] shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-2">Responded</p>
+          <div className="stat-card">
+            <p className="badge-micropill mb-2">Responded</p>
             <p className="text-4xl font-bold text-[#065F46]">{String(quotes.filter(q => q.status === 'responded').length).padStart(2, '0')}</p>
           </div>
-          <div className="bg-white p-8 rounded-[2rem] border border-[#EBE7E0] shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] mb-2">Total received</p>
-            <p className="text-4xl font-bold text-[#4F46E5]">{String(quotes.length).padStart(2, '0')}</p>
+          <div className="stat-card">
+            <p className="badge-micropill mb-2">Total received</p>
+            <p className="text-4xl font-bold text-primary">{String(quotes.length).padStart(2, '0')}</p>
           </div>
         </div>
 
         {/* Tabs */}
         <div className="flex gap-2 mb-10">
           {([
-            { key: 'quotes', label: 'Quote requests', badge: pendingQuotes.length },
-            { key: 'profile', label: 'My profile' },
-          ] as { key: DashTab; label: string; badge?: number }[]).map(t => (
+            { key: 'quotes' as DashTab, label: 'Quote requests', badge: pendingQuotes.length },
+            { key: 'profile' as DashTab, label: 'My profile' },
+          ]).map(t => (
             <button
               key={t.key}
               onClick={() => { setTab(t.key); setEditing(false); }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold border-2 transition-all ${
-                tab === t.key
-                  ? 'bg-[#2D2926] text-[#FDFBF7] border-[#2D2926]'
-                  : 'bg-white text-[#7D766D] border-[#EBE7E0] hover:border-[#2D2926] hover:text-[#2D2926]'
-              }`}
+              className={`btn-filter ${tab === t.key ? 'btn-filter-active' : ''}`}
             >
               {t.label}
               {t.badge !== undefined && t.badge > 0 && (
-                <span className={`px-1.5 rounded-full text-[10px] font-black ${tab === t.key ? 'bg-white/20' : 'bg-[#EBE7E0]'}`}>
+                <span className={`ml-2 px-1.5 rounded-full text-[10px] font-black ${tab === t.key ? 'bg-white/20' : 'bg-accent-bg'}`}>
                   {t.badge}
                 </span>
               )}
@@ -346,11 +329,11 @@ export default function ProviderDashboardPage() {
         {tab === 'quotes' && (
           <div>
             {!quotesLoaded ? (
-              <p className="text-sm text-[#A8A29E] font-medium">Loading...</p>
+              <p className="text-sm text-muted font-medium">Loading...</p>
             ) : quotes.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-2xl font-serif text-[#2D2926] mb-3">No quote requests yet.</p>
-                <p className="text-sm text-[#7D766D]">
+                <p className="text-2xl font-serif text-foreground mb-3">No quote requests yet.</p>
+                <p className="text-sm text-body">
                   {provider.verified
                     ? 'When clients request a quote from you, they will appear here and arrive by SMS.'
                     : 'Quote requests will appear here once your profile is approved and live.'}
@@ -358,34 +341,34 @@ export default function ProviderDashboardPage() {
               </div>
             ) : (
               <>
-                <section className="bg-white p-10 rounded-[2.5rem] border border-[#EBE7E0] shadow-sm">
-                  <h2 className="text-2xl font-serif text-[#2D2926] mb-8">Active Engagements</h2>
+                <section className="bg-surface p-10 rounded-[2.5rem] border border-border shadow-sm">
+                  <h2 className="text-2xl font-serif text-foreground mb-8">Active Engagements</h2>
                   <div className="space-y-4">
                     {quotes.map(q => (
                       <div
                         key={q.id}
-                        className="flex items-center justify-between p-6 bg-[#F9F7F4] rounded-3xl border border-[#EBE7E0] hover:border-[#2D2926]/20 transition-all"
+                        className="flex items-center justify-between p-6 bg-input-bg rounded-3xl border border-border hover:border-foreground/20 transition-all"
                       >
                         <div>
                           <div className="flex items-center gap-3 mb-1">
-                            <span className="font-bold text-[#2D2926] capitalize">{q.plan_type} in {q.location}</span>
-                            <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${statusStyles[q.status]}`}>
+                            <span className="font-bold text-foreground capitalize">{q.plan_type} in {q.location}</span>
+                            <span className={`badge-status ${statusStyles[q.status]}`}>
                               {q.status}
                             </span>
                           </div>
-                          <p className="text-xs text-[#7D766D]">
+                          <p className="text-xs text-body">
                             {q.category}
                             {q.budget ? ` · UGX ${fmt(q.budget)}` : ''}
                             {q.client_phone ? ` · ${q.client_phone}` : ''}
                           </p>
-                          <p className="text-[10px] text-[#C4BAB0] mt-1">Ref: {q.ref} · {date(q.created_at)}</p>
+                          <p className="text-[10px] text-muted-lighter mt-1">Ref: {q.ref} · {date(q.created_at)}</p>
                         </div>
                         <div className="flex flex-col gap-2 items-end shrink-0 ml-4">
                           {q.status === 'pending' && (
                             <button
                               onClick={() => updateQuoteStatus(q.id, 'responded')}
                               disabled={updatingQuote === q.id}
-                              className="text-xs font-black uppercase tracking-widest text-[#4F46E5] hover:translate-x-1 transition-transform disabled:opacity-50"
+                              className="text-xs font-black uppercase tracking-widest text-primary hover:translate-x-1 transition-transform disabled:opacity-50"
                             >
                               {updatingQuote === q.id ? 'Updating...' : 'Mark responded →'}
                             </button>
@@ -394,13 +377,13 @@ export default function ProviderDashboardPage() {
                             <button
                               onClick={() => updateQuoteStatus(q.id, 'closed')}
                               disabled={updatingQuote === q.id}
-                              className="text-xs font-black uppercase tracking-widest text-[#A8A29E] hover:text-[#2D2926] transition-colors disabled:opacity-50"
+                              className="text-xs font-black uppercase tracking-widest text-muted hover:text-foreground transition-colors disabled:opacity-50"
                             >
                               {updatingQuote === q.id ? 'Updating...' : 'Close →'}
                             </button>
                           )}
                           {q.status === 'closed' && (
-                            <span className="text-xs font-semibold text-[#C4BAB0]">Closed</span>
+                            <span className="text-xs font-semibold text-muted-lighter">Closed</span>
                           )}
                         </div>
                       </div>
@@ -420,12 +403,12 @@ export default function ProviderDashboardPage() {
                 <div className="flex justify-end mb-6">
                   <button
                     onClick={() => setEditing(true)}
-                    className="border-2 border-[#EBE7E0] text-[#2D2926] px-5 py-2.5 rounded-xl text-xs font-bold hover:border-[#2D2926] transition-colors"
+                    className="border-2 border-border text-foreground px-5 py-2.5 rounded-xl text-xs font-bold hover:border-foreground transition-colors"
                   >
                     Edit profile
                   </button>
                 </div>
-                <div className="divide-y divide-[#EBE7E0]">
+                <div className="divide-y divide-border">
                   {[
                     { label: 'Business name', value: provider.name },
                     { label: 'Phone', value: provider.phone },
@@ -441,8 +424,8 @@ export default function ProviderDashboardPage() {
                     { label: 'Website / Social', value: provider.website },
                   ].map(row => row.value ? (
                     <div key={row.label} className="py-5 grid grid-cols-3 gap-4">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-[#A8A29E] pt-0.5">{row.label}</p>
-                      <p className="text-sm text-[#2D2926] col-span-2 leading-relaxed">{row.value}</p>
+                      <p className="badge-micropill pt-0.5">{row.label}</p>
+                      <p className="text-sm text-foreground col-span-2 leading-relaxed">{row.value}</p>
                     </div>
                   ) : null)}
                 </div>
@@ -450,16 +433,16 @@ export default function ProviderDashboardPage() {
             ) : (
               <div className="space-y-5">
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-2">Business name</label>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-2">Business name</label>
                   <input
                     value={form.name ?? ''}
                     onChange={e => setForm({ ...form, name: e.target.value })}
-                    className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm"
+                    className="input-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-3">
-                    Categories <span className="normal-case font-semibold text-[#C4BAB0]">select all that apply</span>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-3">
+                    Categories <span className="normal-case font-semibold text-muted-lighter">select all that apply</span>
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {categories.map(cat => {
@@ -469,11 +452,7 @@ export default function ProviderDashboardPage() {
                           key={cat}
                           type="button"
                           onClick={() => toggleCategory(cat)}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all duration-150 ${
-                            selected
-                              ? 'bg-[#2D2926] text-[#FDFBF7] border-[#2D2926]'
-                              : 'bg-white text-[#7D766D] border-[#EBE7E0] hover:border-[#2D2926] hover:text-[#2D2926]'
-                          }`}
+                          className={`btn-chip ${selected ? 'btn-chip-active' : ''}`}
                         >
                           {cat}
                         </button>
@@ -481,68 +460,68 @@ export default function ProviderDashboardPage() {
                     })}
                   </div>
                   {selectedCategories.length > 0 && (
-                    <p className="mt-3 text-xs text-[#A8A29E]">Selected: {selectedCategories.join(' · ')}</p>
+                    <p className="mt-3 text-xs text-muted">Selected: {selectedCategories.join(' · ')}</p>
                   )}
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-2">Location</label>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-2">Location</label>
                   <input
                     value={form.location ?? ''}
                     onChange={e => setForm({ ...form, location: e.target.value })}
-                    className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm"
+                    className="input-base"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-2">Min price (UGX)</label>
+                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-2">Min price (UGX)</label>
                     <input
                       type="number"
                       value={form.price_min ?? ''}
                       onChange={e => setForm({ ...form, price_min: e.target.value ? Number(e.target.value) : null })}
-                      className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm"
+                      className="input-base"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-2">Max price (UGX)</label>
+                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-2">Max price (UGX)</label>
                     <input
                       type="number"
                       value={form.price_max ?? ''}
                       onChange={e => setForm({ ...form, price_max: e.target.value ? Number(e.target.value) : null })}
-                      className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm"
+                      className="input-base"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-2">About your business</label>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-2">About your business</label>
                   <textarea
                     rows={3}
                     value={form.description ?? ''}
                     onChange={e => setForm({ ...form, description: e.target.value })}
-                    className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm resize-none"
+                    className="input-base resize-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#A8A29E] mb-2">Website or social media</label>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-2">Website or social media</label>
                   <input
                     value={form.website ?? ''}
                     onChange={e => setForm({ ...form, website: e.target.value })}
-                    className="w-full p-4 bg-white rounded-2xl border-2 border-[#EBE7E0] outline-none focus:border-[#2D2926] transition-all text-[#2D2926] font-medium text-sm"
+                    className="input-base"
                   />
                 </div>
                 {saveStatus === 'error' && (
-                  <p className="text-sm font-semibold text-red-700 bg-red-50 border border-red-100 p-4 rounded-2xl">{saveError}</p>
+                  <p className="error-banner">{saveError}</p>
                 )}
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={save}
                     disabled={saveStatus === 'loading'}
-                    className="flex-1 bg-[#2D2926] text-[#FDFBF7] py-4 rounded-2xl font-bold text-sm hover:bg-[#1A1614] transition-colors disabled:opacity-50"
+                    className="flex-1 bg-button-bg text-button-text py-4 rounded-2xl font-bold text-sm hover:bg-button-hover transition-colors disabled:opacity-50"
                   >
                     {saveStatus === 'loading' ? 'Saving...' : 'Save changes'}
                   </button>
                   <button
                     onClick={() => { setEditing(false); setForm(provider); setSelectedCategories(provider.category ? provider.category.split(',').map(c => c.trim()) : []); }}
-                    className="px-6 py-4 border-2 border-[#EBE7E0] text-[#7D766D] rounded-2xl font-bold text-sm hover:border-[#2D2926] hover:text-[#2D2926] transition-colors"
+                    className="px-6 py-4 border-2 border-border text-body rounded-2xl font-bold text-sm hover:border-foreground hover:text-foreground transition-colors"
                   >
                     Cancel
                   </button>

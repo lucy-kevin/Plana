@@ -78,7 +78,7 @@ export default function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative overflow-hidden px-6 md:px-16 pt-16 pb-0 grid md:grid-cols-2 gap-12 items-center min-h-[calc(100vh-73px)]">
+      <section className="relative overflow-hidden px-6 md:px-16 pb-0 grid md:grid-cols-2 gap-12 items-center min-h-screen">
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
           <source src="/assets/13903091_960_540_60fps.mp4" type="video/mp4" />
         </video>
